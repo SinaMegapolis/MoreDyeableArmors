@@ -1,5 +1,6 @@
 package sinamegapolis.moredyeablearmors.init;
 
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -16,11 +17,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
-import sinamegapolis.moredyeablearmors.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = MoreDyeableArmors.MODID)
 public class ModRegistry {
@@ -73,19 +72,34 @@ public class ModRegistry {
             , Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE, Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS
             , Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS
             , Items.GOLDEN_HELMET, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLDEN_BOOTS};
-     private static final Map armorsMap = Utils.toMap(listOfArmors, listOfDyeableArmors);
+     private static final ImmutableMap<ItemArmor, ItemDyeableArmor> armorsMap = ImmutableMap.<ItemArmor,ItemDyeableArmor>builder().
+             put(Items.IRON_BOOTS,ironBoots)
+             .put(Items.IRON_CHESTPLATE,ironChestplate)
+             .put(Items.IRON_HELMET,ironHelmet)
+             .put(Items.IRON_LEGGINGS,ironLeggings)
+             .put(Items.CHAINMAIL_BOOTS,chainBoots)
+             .put(Items.CHAINMAIL_CHESTPLATE,chainChestplate)
+             .put(Items.CHAINMAIL_HELMET,chainHelmet)
+             .put(Items.CHAINMAIL_LEGGINGS,chainLeggings)
+             .put(Items.GOLDEN_BOOTS,goldBoots)
+             .put(Items.GOLDEN_CHESTPLATE,goldChestplate)
+             .put(Items.GOLDEN_HELMET,goldHelmet)
+             .put(Items.GOLDEN_LEGGINGS,goldLeggings)
+             .put(Items.DIAMOND_BOOTS,diamondBoots)
+             .put(Items.DIAMOND_CHESTPLATE,diamondChestplate)
+             .put(Items.DIAMOND_LEGGINGS,diamondLeggings)
+             .put(Items.DIAMOND_HELMET,diamondHelmet).build();
 
     @SubscribeEvent
     public static void onItemRegister(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(ITEMS.toArray(new Item[0]));
-        for(ItemArmor armor1 : listOfArmors) {
-            ItemDyeableArmor armor = (ItemDyeableArmor) armorsMap.get(armor1);
-            GameRegistry.addShapelessRecipe(new ResourceLocation(armor.getRegistryName().toString() + "_recipe"), new ResourceLocation(""),
-                    new ItemStack(armor, 1), Ingredient.fromStacks(new ItemStack(Items.STRING, 3)),
+        armorsMap.forEach((itemArmor, itemDyeableArmor) -> {
+            GameRegistry.addShapelessRecipe(new ResourceLocation(itemDyeableArmor.getRegistryName().toString() + "_recipe"), new ResourceLocation(""),
+                    new ItemStack(itemDyeableArmor, 1), Ingredient.fromStacks(new ItemStack(Items.STRING, 3)),
                     Ingredient.fromItems(Items.LEATHER),
-                    Ingredient.fromItems(armor1),
+                    Ingredient.fromItems(itemArmor),
                     Ingredient.fromItems(Items.SLIME_BALL));
-        }
+        });
     }
 
     @SubscribeEvent
