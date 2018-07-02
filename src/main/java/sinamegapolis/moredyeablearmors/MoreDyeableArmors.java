@@ -18,22 +18,17 @@ public class MoreDyeableArmors
     @Mod.Instance
     public static MoreDyeableArmors INSTANCE;
 
-    @SidedProxy(clientSide = "sinamegapolis.moredyeablearmors.proxy.ClientProxy", serverSide = "sinamegapolis.moredyeablearmors.proxy.CommonProxy")
-    public static CommonProxy PROXY;
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e){
-        PROXY.preInit(e);
-        PROXY.registerRenderers();
+
     }
     @Mod.EventHandler
     public void init(FMLInitializationEvent e) {
         MinecraftForge.EVENT_BUS.register(this);
-        PROXY.init(e);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent e) {
-        PROXY.postInit(e);
+
     }
 }

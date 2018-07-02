@@ -1,12 +1,9 @@
 package sinamegapolis.moredyeablearmors.util;
 
-public class ColorUtils {
-    public static int convertHexToInt(String hex){
-        return Integer.parseInt(hex, 16);
-    }
-    public static String convertIntToHex(int color){
-        return Integer.toHexString(color);
-    }
+import java.util.HashMap;
+import java.util.Map;
+
+public class Utils {
     public static int combineColors(int color1, int color2, int scale) {
         if(scale == 0) {
             return color1;
@@ -27,5 +24,26 @@ public class ColorUtils {
             b = (int) Math.sqrt(b * b2);
         }
         return a << 24 | r << 16 | g << 8 | b;
+    }
+    public static Map toMap(Object[] keys, Object[] values){
+        int keysSize = (keys != null) ? keys.length : 0;
+        int valuesSize = (values != null) ? values.length : 0;
+
+        if (keysSize == 0 && valuesSize == 0) {
+            // return mutable map
+            return new HashMap();
+        }
+
+        if (keysSize != valuesSize) {
+            throw new IllegalArgumentException(
+                    "The number of keys doesn't match the number of values.");
+        }
+
+        Map map = new HashMap();
+        for (int i = 0; i < keysSize; i++) {
+            map.put(keys[i], values[i]);
+        }
+
+        return map;
     }
 }
