@@ -1,7 +1,6 @@
 package sinamegapolis.moredyeablearmors.util;
 
 import com.google.common.collect.Lists;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemArmor;
@@ -11,7 +10,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.DyeUtils;
 import net.minecraftforge.registries.IForgeRegistryEntry;
-import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +22,7 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
         ItemStack itemstack = ItemStack.EMPTY;
-        List<ItemStack> list = Lists.<ItemStack>newArrayList();
+        List<ItemStack> list = Lists.newArrayList();
 
         for (int i = 0; i < inv.getSizeInventory(); ++i)
         {
@@ -109,7 +107,7 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
         else
         {
             if(armorHasColor)
-                itemarmor.setColor(itemstack, ColorUtils.combineColors(armorColor, dyeColor, 1));
+                itemarmor.setColor(itemstack, Utils.combineColors(armorColor, dyeColor, 1));
             if(!armorHasColor)
                 itemarmor.setColor(itemstack, dyeColor);
             return itemstack;
@@ -130,7 +128,7 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
     @Override
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
     {
-        NonNullList<ItemStack> nonnulllist = NonNullList.<ItemStack>withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 
         for (int i = 0; i < nonnulllist.size(); ++i)
         {
