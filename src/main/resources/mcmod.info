@@ -1,0 +1,16 @@
+[
+{
+  "modid": "moredyeablearmors",
+  "name": "More Dyeable Armors",
+  "description": "Adds a Dyeable Version of Armors!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["SinaMegapolis"],
+  "credits": "The Guys at MMD for helping me fix my silly bugs >.>",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
