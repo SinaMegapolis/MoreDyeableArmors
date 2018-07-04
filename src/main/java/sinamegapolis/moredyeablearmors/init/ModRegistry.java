@@ -1,22 +1,28 @@
 package sinamegapolis.moredyeablearmors.init;
 
 import com.google.common.collect.ImmutableMap;
+import knightminer.inspirations.library.InspirationsRegistry;
+import knightminer.inspirations.library.recipe.cauldron.ICauldronRecipe;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
+import sinamegapolis.moredyeablearmors.util.Integrations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,16 +68,6 @@ public class ModRegistry {
     private static final ItemDyeableArmor goldLeggings = new ItemDyeableArmor(DyeableGoldArmor, EntityEquipmentSlot.LEGS, "dyeablegold_leggings");
     private static final ItemDyeableArmor goldBoots = new ItemDyeableArmor(DyeableGoldArmor,EntityEquipmentSlot.FEET, "dyeablegold_boots");
 
-    private static final ItemDyeableArmor[] listOfDyeableArmors = new ItemDyeableArmor[]{
-            ironHelmet, ironChestplate, ironLeggings, ironBoots
-            ,chainHelmet, chainChestplate, chainLeggings, chainBoots
-            ,diamondHelmet, diamondChestplate, diamondLeggings, diamondBoots
-            ,goldHelmet, goldChestplate, goldLeggings, goldBoots};
-    private static final ItemArmor[] listOfArmors = new ItemArmor[]{
-              Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS
-            , Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE, Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS
-            , Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS
-            , Items.GOLDEN_HELMET, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLDEN_BOOTS};
      private static final ImmutableMap<ItemArmor, ItemDyeableArmor> armorsMap = ImmutableMap.<ItemArmor,ItemDyeableArmor>builder().
              put(Items.IRON_BOOTS,ironBoots)
              .put(Items.IRON_CHESTPLATE,ironChestplate)
@@ -104,14 +100,21 @@ public class ModRegistry {
 
     @SubscribeEvent
     public static void colorItemArmors(ColorHandlerEvent.Item event){
-        for (ItemDyeableArmor armor: listOfDyeableArmors) {
-            event.getItemColors().registerItemColorHandler((stack, tintindex)->{
-                if (armor.hasColor(stack) && tintindex==0)
-                    return armor.getColor(stack);
-                else if(tintindex==0)
+        armorsMap.forEach((itemArmor, itemDyeableArmor)-> event.getItemColors().registerItemColorHandler((itemStack, tintIndex)->{
+            if(tintIndex==0){
+                if(itemDyeableArmor.hasColor(itemStack))
+                    return itemDyeableArmor.getColor(itemStack);
+                else
                     return 10511680;
-                return 0xFFFFFF;
-            },armor);
+            }
+            return 0xFFFFFF;
+        },itemDyeableArmor));
+    }
+
+    @SubscribeEvent
+    public static void inspirationsIntegration(RegistryEvent.Register<IRecipe> event){
+        if(Loader.isModLoaded("inspirations")) {
+            Integrations.integrateWithInspirations();
         }
     }
 }
