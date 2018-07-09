@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "items/chainmail_leggings",
+        "layer0": "moredyeablearmors:items/leather_leggings",
         "layer1": "moredyeablearmors:items/chainmail_leggings_overlay"
     }
 }

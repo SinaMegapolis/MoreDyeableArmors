@@ -1,49 +1,40 @@
 package sinamegapolis.moredyeablearmors.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
+import sinamegapolis.moredyeablearmors.config.ModConfig;
 
 public class Utils {
     public static int combineColors(int color1, int color2, int scale) {
         if(scale == 0) {
             return color1;
         }
-        int a = color1 >> 24 & 0xFF;
-        int r = color1 >> 16 & 0xFF;
-        int g = color1 >> 8 & 0xFF;
-        int b = color1 & 0xFF;
-        int a2 = color2 >> 24 & 0xFF;
-        int r2 = color2 >> 16 & 0xFF;
-        int g2 = color2 >> 8 & 0xFF;
-        int b2 = color2 & 0xFF;
+
+        int[] argbColor1 = getARGBArrayFromInt(color1);
+        int[] argbColor2 = getARGBArrayFromInt(color2);
 
         for(int i = 0; i < scale; i++) {
-            a = (int) Math.sqrt(a * a2);
-            r = (int) Math.sqrt(r * r2);
-            g = (int) Math.sqrt(g * g2);
-            b = (int) Math.sqrt(b * b2);
+            argbColor1[0] = (int) Math.sqrt(argbColor1[0] * argbColor2[0]);
+            argbColor1[1] = (int) Math.sqrt(argbColor1[1] * argbColor2[1]);
+            argbColor1[2] = (int) Math.sqrt(argbColor1[2] * argbColor2[2]);
+            argbColor1[3] = (int) Math.sqrt(argbColor1[3] * argbColor2[3]);
         }
-        return a << 24 | r << 16 | g << 8 | b;
+        return getIntFromARGBArray(argbColor1);
     }
-    public static Map toMap(Object[] keys, Object[] values){
-        int keysSize = (keys != null) ? keys.length : 0;
-        int valuesSize = (values != null) ? values.length : 0;
+    public static int[] getARGBArrayFromInt(int color){
+        return new int[]{color >> 24 & 0xFF,color>>16 & 0xFF,color>>8&0xFF,color & 0xFF};
+    }
 
-        if (keysSize == 0 && valuesSize == 0) {
-            // return mutable map
-            return new HashMap();
+    public static int getIntFromARGBArray(int[] argb){
+        return argb[0] << 24 | argb[1] << 16 | argb[2] << 8 | argb[3];
+    }
+    public static ItemDyeableArmor getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot slot, ItemDyeableArmor.ArmorMaterial normalArmorMaterial,
+                                                                    ItemDyeableArmor.ArmorMaterial leathericArmorMaterial, String name){
+        if(ModConfig.leathericArmor && leathericArmorMaterial!=null){
+            return new ItemDyeableArmor(leathericArmorMaterial,slot,name+"_leatheric");
+        }else if(!ModConfig.leathericArmor && normalArmorMaterial!=null){
+            return new ItemDyeableArmor(normalArmorMaterial,slot,name);
         }
-
-        if (keysSize != valuesSize) {
-            throw new IllegalArgumentException(
-                    "The number of keys doesn't match the number of values.");
-        }
-
-        Map map = new HashMap();
-        for (int i = 0; i < keysSize; i++) {
-            map.put(keys[i], values[i]);
-        }
-
-        return map;
+        return null;
     }
 }

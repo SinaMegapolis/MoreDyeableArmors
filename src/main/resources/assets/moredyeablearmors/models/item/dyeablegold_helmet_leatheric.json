@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "minecraft:items/iron_helmet",
+        "layer0": "moredyeablearmors:items/leather_helmet",
         "layer1": "moredyeablearmors:items/gold_helmet_overlay"
     }
 }
