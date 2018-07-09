@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "moredyeablearmors:items/gold_boots",
+        "layer0": "moredyeablearmors:items/leather_boots",
         "layer1": "moredyeablearmors:items/gold_boots_overlay"
     }
 }

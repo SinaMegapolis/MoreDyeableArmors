@@ -22,7 +22,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
+import sinamegapolis.moredyeablearmors.config.ModConfig;
 import sinamegapolis.moredyeablearmors.util.Integrations;
+import sinamegapolis.moredyeablearmors.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,7 @@ import java.util.List;
 public class ModRegistry {
     public static final List<Item> ITEMS = new ArrayList<>();
     /**
-     * All values used to register Vanilla ItemDyeableArmor are extracted from ItemArmor.ArmorMaterial
+     * All values used to register Vanilla ArmorMaterials are extracted from ItemArmor.ArmorMaterial
      */
     private static final ItemDyeableArmor.ArmorMaterial DyeableDiamondArmor = EnumHelper.addArmorMaterial("DYEABLEDIAMOND",
             MoreDyeableArmors.MODID+":diamond", 33, new int[]{3, 6, 8, 3},
@@ -46,27 +48,43 @@ public class ModRegistry {
             MoreDyeableArmors.MODID+":gold", 7, new int[]{1, 3, 5, 2},
             25, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,0.0f);
     /**
-     * Now actual ItemArmors
+     * These are "Leather-ic" versions of ArmorMaterials, enabled by "leathericArmor" config option
      */
-    private static final ItemDyeableArmor chainHelmet = new ItemDyeableArmor(DyeableChainArmor, EntityEquipmentSlot.HEAD,"dyeablechainmail_helmet");
-    private static final ItemDyeableArmor chainChestplate = new ItemDyeableArmor(DyeableChainArmor, EntityEquipmentSlot.CHEST,"dyeablechainmail_chestplate");
-    private static final ItemDyeableArmor chainLeggings = new ItemDyeableArmor(DyeableChainArmor, EntityEquipmentSlot.LEGS, "dyeablechainmail_leggings");
-    private static final ItemDyeableArmor chainBoots = new ItemDyeableArmor(DyeableChainArmor,EntityEquipmentSlot.FEET, "dyeablechainmail_boots");
+    private static final ItemDyeableArmor.ArmorMaterial DyeableLeathericDiamondArmor = EnumHelper.addArmorMaterial("DYEABLELEATHERICDIAMOND",
+            MoreDyeableArmors.MODID+":leatheric_diamond", 33, new int[]{3, 6, 8, 3},
+            10, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND,2.0f);
+    private static final ItemDyeableArmor.ArmorMaterial DyeableLeathericChainArmor = EnumHelper.addArmorMaterial("DYEABLELEATHERICCHAIN",
+            MoreDyeableArmors.MODID+":leatheric_chainmail", 15, new int[]{1, 4, 5, 2},
+            12, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,0.0f);
+    private static final ItemDyeableArmor.ArmorMaterial DyeableLeathericIronArmor = EnumHelper.addArmorMaterial("DYEABLELEATHERICIRON",
+            MoreDyeableArmors.MODID+":leatheric_iron", 15, new int[]{2, 5, 6, 2},
+            9, SoundEvents.ITEM_ARMOR_EQUIP_IRON,0.0f);
+    private static final ItemDyeableArmor.ArmorMaterial DyeableLeathericGoldArmor = EnumHelper.addArmorMaterial("DYEABLELEATHERICGOLD",
+            MoreDyeableArmors.MODID+":leatheric_gold", 7, new int[]{1, 3, 5, 2},
+            25, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN,0.0f);
+    /**
+     * Now actual ItemArmors
+     * these are set according to config file using Utils#getItemDyeableArmorBasedOnConfig
+     */
+    private static final ItemDyeableArmor chainHelmet = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.HEAD, DyeableChainArmor, DyeableLeathericChainArmor, "dyeablechainmail_helmet");
+    private static final ItemDyeableArmor chainChestplate = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.CHEST, DyeableChainArmor, DyeableLeathericChainArmor, "dyeablechainmail_chestplate");
+    private static final ItemDyeableArmor chainLeggings = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.LEGS, DyeableChainArmor, DyeableLeathericChainArmor, "dyeablechainmail_leggings");
+    private static final ItemDyeableArmor chainBoots = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.FEET, DyeableChainArmor, DyeableLeathericChainArmor, "dyeablechainmail_boots");
 
-    private static final ItemDyeableArmor ironHelmet = new ItemDyeableArmor(DyeableIronArmor, EntityEquipmentSlot.HEAD,"dyeableiron_helmet");
-    private static final ItemDyeableArmor ironChestplate = new ItemDyeableArmor(DyeableIronArmor, EntityEquipmentSlot.CHEST,"dyeableiron_chestplate");
-    private static final ItemDyeableArmor ironLeggings = new ItemDyeableArmor(DyeableIronArmor, EntityEquipmentSlot.LEGS, "dyeableiron_leggings");
-    private static final ItemDyeableArmor ironBoots = new ItemDyeableArmor(DyeableIronArmor,EntityEquipmentSlot.FEET, "dyeableiron_boots");
+    private static final ItemDyeableArmor ironHelmet = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.HEAD, DyeableIronArmor, DyeableLeathericIronArmor, "dyeableiron_helmet");
+    private static final ItemDyeableArmor ironChestplate = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.CHEST, DyeableIronArmor, DyeableLeathericIronArmor, "dyeableiron_chestplate");
+    private static final ItemDyeableArmor ironLeggings = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.LEGS, DyeableIronArmor, DyeableLeathericIronArmor, "dyeableiron_leggings");
+    private static final ItemDyeableArmor ironBoots = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.FEET, DyeableIronArmor, DyeableLeathericIronArmor, "dyeableiron_boots");
 
-    private static final ItemDyeableArmor diamondHelmet = new ItemDyeableArmor(DyeableDiamondArmor, EntityEquipmentSlot.HEAD,"dyeablediamond_helmet");
-    private static final ItemDyeableArmor diamondChestplate = new ItemDyeableArmor(DyeableDiamondArmor, EntityEquipmentSlot.CHEST,"dyeablediamond_chestplate");
-    private static final ItemDyeableArmor diamondLeggings = new ItemDyeableArmor(DyeableDiamondArmor, EntityEquipmentSlot.LEGS, "dyeablediamond_leggings");
-    private static final ItemDyeableArmor diamondBoots = new ItemDyeableArmor(DyeableDiamondArmor,EntityEquipmentSlot.FEET, "dyeablediamond_boots");
+    private static final ItemDyeableArmor diamondHelmet = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.HEAD, DyeableDiamondArmor, DyeableLeathericDiamondArmor, "dyeablediamond_helmet");
+    private static final ItemDyeableArmor diamondChestplate = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.CHEST, DyeableDiamondArmor, DyeableLeathericDiamondArmor, "dyeablediamond_chestplate");
+    private static final ItemDyeableArmor diamondLeggings = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.LEGS, DyeableDiamondArmor, DyeableLeathericDiamondArmor, "dyeablediamond_leggings");
+    private static final ItemDyeableArmor diamondBoots = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.FEET, DyeableDiamondArmor, DyeableLeathericDiamondArmor, "dyeablediamond_boots");
 
-    private static final ItemDyeableArmor goldHelmet = new ItemDyeableArmor(DyeableGoldArmor, EntityEquipmentSlot.HEAD,"dyeablegold_helmet");
-    private static final ItemDyeableArmor goldChestplate = new ItemDyeableArmor(DyeableGoldArmor, EntityEquipmentSlot.CHEST,"dyeablegold_chestplate");
-    private static final ItemDyeableArmor goldLeggings = new ItemDyeableArmor(DyeableGoldArmor, EntityEquipmentSlot.LEGS, "dyeablegold_leggings");
-    private static final ItemDyeableArmor goldBoots = new ItemDyeableArmor(DyeableGoldArmor,EntityEquipmentSlot.FEET, "dyeablegold_boots");
+    private static final ItemDyeableArmor goldHelmet = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.HEAD, DyeableGoldArmor, DyeableLeathericGoldArmor, "dyeablegold_helmet");
+    private static final ItemDyeableArmor goldChestplate = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.CHEST, DyeableGoldArmor, DyeableLeathericGoldArmor, "dyeablegold_chestplate");
+    private static final ItemDyeableArmor goldLeggings = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.LEGS, DyeableGoldArmor, DyeableLeathericGoldArmor, "dyeablegold_leggings");
+    private static final ItemDyeableArmor goldBoots = Utils.getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot.FEET, DyeableGoldArmor, DyeableLeathericGoldArmor, "dyeablegold_boots");
 
      private static final ImmutableMap<ItemArmor, ItemDyeableArmor> armorsMap = ImmutableMap.<ItemArmor,ItemDyeableArmor>builder().
              put(Items.IRON_BOOTS,ironBoots)
@@ -90,11 +108,16 @@ public class ModRegistry {
     public static void onItemRegister(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(ITEMS.toArray(new Item[0]));
         armorsMap.forEach((itemArmor, itemDyeableArmor) -> {
-            GameRegistry.addShapelessRecipe(new ResourceLocation(itemDyeableArmor.getRegistryName().toString() + "_recipe"), new ResourceLocation(""),
-                    new ItemStack(itemDyeableArmor, 1), Ingredient.fromStacks(new ItemStack(Items.STRING, 3)),
-                    Ingredient.fromItems(Items.LEATHER),
-                    Ingredient.fromItems(itemArmor),
-                    Ingredient.fromItems(Items.SLIME_BALL));
+            if(ModConfig.leathericArmor) {
+                GameRegistry.addShapelessRecipe(new ResourceLocation(itemDyeableArmor.getRegistryName().toString() + "_recipe"), new ResourceLocation(""),
+                        new ItemStack(itemDyeableArmor, 1), Ingredient.fromStacks(new ItemStack(Items.STRING, 3)),
+                        Ingredient.fromItems(Items.LEATHER),
+                        Ingredient.fromItems(itemArmor),
+                        Ingredient.fromItems(Items.SLIME_BALL));
+            }else if(!ModConfig.leathericArmor){
+                GameRegistry.addShapelessRecipe(new ResourceLocation(itemDyeableArmor.getRegistryName().toString()+"_recipe"), new ResourceLocation(""),
+                        new ItemStack(itemDyeableArmor, 1),Ingredient.fromItems(itemArmor));
+            }
         });
     }
 
@@ -105,7 +128,7 @@ public class ModRegistry {
                 if(itemDyeableArmor.hasColor(itemStack))
                     return itemDyeableArmor.getColor(itemStack);
                 else
-                    return 10511680;
+                    return itemDyeableArmor.getColorBasedOnType();
             }
             return 0xFFFFFF;
         },itemDyeableArmor));
@@ -114,7 +137,8 @@ public class ModRegistry {
     @SubscribeEvent
     public static void inspirationsIntegration(RegistryEvent.Register<IRecipe> event){
         if(Loader.isModLoaded("inspirations")) {
-            Integrations.integrateWithInspirations();
+            if(!Integrations.integrateWithInspirations())
+                MoreDyeableArmors.logger.warn("Inspirations is present but for some reason the mod can't integrate with it, please make an issue in github with full log if you want it to get fixed");
         }
     }
 }

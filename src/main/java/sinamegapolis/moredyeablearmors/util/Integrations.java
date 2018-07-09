@@ -2,8 +2,11 @@ package sinamegapolis.moredyeablearmors.util;
 
 import knightminer.inspirations.library.InspirationsRegistry;
 import knightminer.inspirations.library.recipe.cauldron.ICauldronRecipe;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
+import sinamegapolis.moredyeablearmors.config.ModConfig;
 
 public class Integrations {
     public static boolean integrateWithInspirations(){
@@ -32,6 +35,7 @@ public class Integrations {
             });
             return true;
         }catch(Exception e){
+            MoreDyeableArmors.logger.error(e.getMessage());
             return false;
         }
     }
