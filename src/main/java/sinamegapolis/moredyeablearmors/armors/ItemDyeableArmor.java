@@ -1,5 +1,7 @@
 package sinamegapolis.moredyeablearmors.armors;
 
+import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
+import net.daveyx0.primitivemobs.item.ItemCamouflageArmor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
@@ -17,11 +19,16 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.StringUtils;
 import sinamegapolis.moredyeablearmors.init.IHasModel;
 import sinamegapolis.moredyeablearmors.init.ModRegistry;
+import sinamegapolis.moredyeablearmors.util.Integrations;
 
 import javax.annotation.Nullable;
 
@@ -33,6 +40,8 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
     private static final String colorTag = "color";
     private static final String displayTag = "display";
     private boolean isLeatheric = false;
+    // used for integration with Primitive Mobs Camouflage_dye
+    private static final String rainbowTag = "israinbow";
 
     public ItemDyeableArmor(ArmorMaterial material, EntityEquipmentSlot slot, String name) {
         super(material, 0, slot);
@@ -107,4 +116,45 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
         return 0xFFFFFF;
     }
 
+    @Override
+    public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+        if(Loader.isModLoaded(Integrations.modId_primitiveMobs) && this.isRainbow(itemStack)){
+            if(PrimitiveMobsItems.CAMOUFLAGE_CHEST!=null)
+                PrimitiveMobsItems.CAMOUFLAGE_CHEST.onArmorTick(world, player, itemStack);
+        }
+    }
+
+    public ItemStack setRainbow(boolean rainbow, ItemStack armor){
+        NBTTagCompound compound = armor.getTagCompound();
+        if (compound == null)
+        {
+            compound = new NBTTagCompound();
+            armor.setTagCompound(compound);
+        }
+
+        NBTTagCompound nbttagcompound = compound.getCompoundTag(displayTag);
+
+        if (!compound.hasKey(displayTag, 10))
+        {
+            compound.setTag(displayTag, nbttagcompound);
+        }
+        nbttagcompound.setBoolean(rainbowTag, rainbow);
+        return armor;
+    }
+
+    private boolean isRainbow(ItemStack armor){
+        NBTTagCompound nbttagcompound = armor.getTagCompound();
+
+        if (nbttagcompound != null)
+        {
+            NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag(displayTag);
+
+            if (nbttagcompound1 != null && nbttagcompound1.hasKey(rainbowTag, Constants.NBT.TAG_BYTE))
+            {
+                boolean isRainbow = nbttagcompound1.getBoolean(rainbowTag);
+                return isRainbow;
+            }
+        }
+        return false;
+    }
 }

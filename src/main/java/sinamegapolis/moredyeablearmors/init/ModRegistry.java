@@ -1,8 +1,8 @@
 package sinamegapolis.moredyeablearmors.init;
 
 import com.google.common.collect.ImmutableMap;
-import knightminer.inspirations.library.InspirationsRegistry;
-import knightminer.inspirations.library.recipe.cauldron.ICauldronRecipe;
+import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
+import net.daveyx0.primitivemobs.item.ItemCamouflageArmor;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -17,7 +17,6 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
@@ -118,6 +117,10 @@ public class ModRegistry {
                 GameRegistry.addShapelessRecipe(new ResourceLocation(itemDyeableArmor.getRegistryName().toString()+"_recipe"), new ResourceLocation(""),
                         new ItemStack(itemDyeableArmor, 1),Ingredient.fromItems(itemArmor));
             }
+            if(Loader.isModLoaded(Integrations.modId_primitiveMobs)){
+                GameRegistry.addShapelessRecipe(new ResourceLocation(itemDyeableArmor.getRegistryName().toString()+"camouflage_dye_recipe"), new ResourceLocation(""),
+                        itemDyeableArmor.setRainbow(true, new ItemStack(itemDyeableArmor, 1)),Ingredient.fromItems(PrimitiveMobsItems.CAMOUFLAGE_DYE),Ingredient.fromItems(itemDyeableArmor));
+            }
         });
     }
 
@@ -125,6 +128,7 @@ public class ModRegistry {
     public static void colorItemArmors(ColorHandlerEvent.Item event){
         armorsMap.forEach((itemArmor, itemDyeableArmor)-> event.getItemColors().registerItemColorHandler((itemStack, tintIndex)->{
             if(tintIndex==0){
+
                 if(itemDyeableArmor.hasColor(itemStack))
                     return itemDyeableArmor.getColor(itemStack);
                 else
@@ -136,7 +140,7 @@ public class ModRegistry {
 
     @SubscribeEvent
     public static void inspirationsIntegration(RegistryEvent.Register<IRecipe> event){
-        if(Loader.isModLoaded("inspirations")) {
+        if(Loader.isModLoaded(Integrations.modId_inspirations)) {
             if(!Integrations.integrateWithInspirations())
                 MoreDyeableArmors.logger.warn("Inspirations is present but for some reason the mod can't integrate with it, please make an issue in github with full log if you want it to get fixed");
         }

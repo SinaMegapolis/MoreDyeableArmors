@@ -31,6 +31,7 @@ dependencies {
     deobfCompile "knightminer:Inspirations:1.12.2-0.2.0.31"
     deobfCompile "thedragonlib:thedragonlib:1.12.2:5.2.0"
     deobfCompile "armorplus:armorplus:1.12.2:11.13.0.40"
+    deobfCompile "primitive-mobs:primitivemobs:1.1.6_beta"
 }
 
 repositories {
