@@ -3,13 +3,16 @@ package sinamegapolis.moredyeablearmors.armors;
 import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
 import net.daveyx0.primitivemobs.item.ItemCamouflageArmor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.texture.*;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,12 +28,17 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringUtils;
+import sinamegapolis.moredyeablearmors.config.ModConfig;
 import sinamegapolis.moredyeablearmors.init.IHasModel;
 import sinamegapolis.moredyeablearmors.init.ModRegistry;
 import sinamegapolis.moredyeablearmors.util.Integrations;
+import sinamegapolis.moredyeablearmors.util.Utils;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * This is just a version of ItemArmor that allows every armor to be colored
@@ -40,8 +48,9 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
     private static final String colorTag = "color";
     private static final String displayTag = "display";
     private boolean isLeatheric = false;
+    private int ticks = 0;
     // used for integration with Primitive Mobs Camouflage_dye
-    private static final String rainbowTag = "israinbow";
+    private static final String rainbowTag = "isRainbow";
 
     public ItemDyeableArmor(ArmorMaterial material, EntityEquipmentSlot slot, String name) {
         super(material, 0, slot);
@@ -118,9 +127,17 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
-        if(Loader.isModLoaded(Integrations.modId_primitiveMobs) && this.isRainbow(itemStack)){
-            if(PrimitiveMobsItems.CAMOUFLAGE_CHEST!=null)
-                PrimitiveMobsItems.CAMOUFLAGE_CHEST.onArmorTick(world, player, itemStack);
+        if(itemStack.getTagCompound().getCompoundTag(displayTag).hasKey("Name") && itemStack.getTagCompound().getCompoundTag(displayTag).getString("Name").equalsIgnoreCase("_sinamegapolis")){
+            if(ticks < ModConfig.easterEggValue) ++ticks;
+            else {
+                this.setColor(itemStack, Utils.addHueDegreesToColor(this.getColor(itemStack), 5f));
+                ticks=0;
+            }
+        }else {
+            if (Loader.isModLoaded(Integrations.modId_primitiveMobs) && this.isRainbow(itemStack)) {
+                if (PrimitiveMobsItems.CAMOUFLAGE_CHEST != null)
+                    PrimitiveMobsItems.CAMOUFLAGE_CHEST.onArmorTick(world, player, itemStack);
+            }
         }
     }
 
@@ -156,5 +173,18 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
             }
         }
         return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if(Loader.isModLoaded(Integrations.modId_primitiveMobs)) {
+            if (GuiScreen.isShiftKeyDown()) {
+                String isRainbow = String.valueOf(this.isRainbow(stack));
+                tooltip.add(I18n.format("texts.tooltip.camouflage")+" "+I18n.format("texts.tooltip.camouflage."+isRainbow));
+            }else{
+                tooltip.add(I18n.format("texts.tooltip.moreinfo"));
+            }
+        }
     }
 }

@@ -37,3 +37,8 @@ item.dyeablegold_helmet_leatheric.name=Gold helmet (Dyeable)
 item.dyeablegold_chestplate_leatheric.name=Gold chestplate (Dyeable)
 item.dyeablegold_leggings_leatheric.name=Gold leggings (Dyeable)
 item.dyeablegold_boots_leatheric.name=Gold boots (Dyeable)
+
+texts.tooltip.camouflage=Dyed with Camouflage:
+texts.tooltip.camouflage.false=§bFalse
+texts.tooltip.camouflage.true=§bTrue
+texts.tooltip.moreinfo=§9§oHold SHIFT for more info

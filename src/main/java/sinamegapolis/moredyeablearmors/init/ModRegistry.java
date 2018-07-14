@@ -2,7 +2,6 @@ package sinamegapolis.moredyeablearmors.init;
 
 import com.google.common.collect.ImmutableMap;
 import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
-import net.daveyx0.primitivemobs.item.ItemCamouflageArmor;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;

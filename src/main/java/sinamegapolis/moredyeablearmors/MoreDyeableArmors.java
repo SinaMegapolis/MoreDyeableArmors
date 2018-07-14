@@ -10,12 +10,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sinamegapolis.moredyeablearmors.proxy.CommonProxy;
 
-@Mod(modid = MoreDyeableArmors.MODID, name = MoreDyeableArmors.NAME, version = MoreDyeableArmors.VERSION)
+@Mod(modid = MoreDyeableArmors.MODID, name = MoreDyeableArmors.NAME, version = MoreDyeableArmors.VERSION, updateJSON = "https://raw.githubusercontent.com/SinaMegapolis/MoreDyeableArmors/master/update-checker.json")
 public class MoreDyeableArmors
 {
     public static final String MODID = "moredyeablearmors";
     public static final String NAME = "More Dyeable Armors";
-    public static final String VERSION = "1.12.2-1.2.0";
+    public static final String VERSION = "1.12.2-1.2.1";
 
     public static final Logger logger = LogManager.getLogger(MoreDyeableArmors.MODID);
 
