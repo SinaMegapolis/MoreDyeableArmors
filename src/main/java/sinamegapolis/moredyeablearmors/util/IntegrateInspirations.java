@@ -6,10 +6,9 @@ import net.minecraft.item.ItemStack;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
 
-public class Integrations {
-    public static final String modId_inspirations = "inspirations";
-    public static final String modId_primitiveMobs = "primitivemobs";
-    public static boolean integrateWithInspirations(){
+public class IntegrateInspirations {
+	
+    public static boolean tryLoading(){
         try{
             InspirationsRegistry.addCauldronRecipe(new ICauldronRecipe() {
                 @Override
@@ -35,8 +34,9 @@ public class Integrations {
             });
             return true;
         }catch(Exception e){
-            MoreDyeableArmors.logger.error(e.getMessage());
+            MoreDyeableArmors.LOGGER.error(e.getMessage());
             return false;
         }
     }
+
 }

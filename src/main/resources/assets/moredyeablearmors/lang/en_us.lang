@@ -1,44 +1,44 @@
-item.dyeablechainmail_helmet.name=Chainmail helmet (Dyeable)
-item.dyeablechainmail_chestplate.name=Chainmail chestplate (Dyeable)
-item.dyeablechainmail_leggings.name=Chainmail leggings (Dyeable)
-item.dyeablechainmail_boots.name=Chainmail boots (Dyeable)
+item.moredyeablearmors.dyeablechainmail_helmet.name=Chain Helmet (Dyeable)
+item.moredyeablearmors.dyeablechainmail_chestplate.name=Chain Chestplate (Dyeable)
+item.moredyeablearmors.dyeablechainmail_leggings.name=Chain Leggings (Dyeable)
+item.moredyeablearmors.dyeablechainmail_boots.name=Chain Boots (Dyeable)
 
-item.dyeablediamond_helmet.name=Diamond helmet (Dyeable)
-item.dyeablediamond_chestplate.name=Diamond chestplate (Dyeable)
-item.dyeablediamond_leggings.name=Diamond leggings (Dyeable)
-item.dyeablediamond_boots.name=Diamond boots (Dyeable)
+item.moredyeablearmors.dyeablediamond_helmet.name=Diamond helmet (Dyeable)
+item.moredyeablearmors.dyeablediamond_chestplate.name=Diamond Chestplate (Dyeable)
+item.moredyeablearmors.dyeablediamond_leggings.name=Diamond Leggings (Dyeable)
+item.moredyeablearmors.dyeablediamond_boots.name=Diamond Boots (Dyeable)
 
-item.dyeableiron_helmet.name=Iron helmet (Dyeable)
-item.dyeableiron_chestplate.name=Iron chestplate (Dyeable)
-item.dyeableiron_leggings.name=Iron leggings (Dyeable)
-item.dyeableiron_boots.name=Iron boots (Dyeable)
+item.moredyeablearmors.dyeableiron_helmet.name=Iron helmet (Dyeable)
+item.moredyeablearmors.dyeableiron_chestplate.name=Iron Chestplate (Dyeable)
+item.moredyeablearmors.dyeableiron_leggings.name=Iron Leggings (Dyeable)
+item.moredyeablearmors.dyeableiron_boots.name=Iron Boots (Dyeable)
 
-item.dyeablegold_helmet.name=Gold helmet (Dyeable)
-item.dyeablegold_chestplate.name=Gold chestplate (Dyeable)
-item.dyeablegold_leggings.name=Gold leggings (Dyeable)
-item.dyeablegold_boots.name=Gold boots (Dyeable)
+item.moredyeablearmors.dyeablegold_helmet.name=Gold helmet (Dyeable)
+item.moredyeablearmors.dyeablegold_chestplate.name=Gold Chestplate (Dyeable)
+item.moredyeablearmors.dyeablegold_leggings.name=Gold Leggings (Dyeable)
+item.moredyeablearmors.dyeablegold_boots.name=Gold Boots (Dyeable)
 
-item.dyeablechainmail_helmet_leatheric.name=Chainmail helmet (Dyeable)
-item.dyeablechainmail_chestplate_leatheric.name=Chainmail chestplate (Dyeable)
-item.dyeablechainmail_leggings_leatheric.name=Chainmail leggings (Dyeable)
-item.dyeablechainmail_boots_leatheric.name=Chainmail boots (Dyeable)
+item.moredyeablearmors.dyeablechainmail_helmet_leatheric.name=Chainmail helmet (Dyeable)
+item.moredyeablearmors.dyeablechainmail_chestplate_leatheric.name=Chainmail Chestplate (Dyeable)
+item.moredyeablearmors.dyeablechainmail_leggings_leatheric.name=Chainmail Leggings (Dyeable)
+item.moredyeablearmors.dyeablechainmail_boots_leatheric.name=Chainmail Boots (Dyeable)
 
-item.dyeablediamond_helmet_leatheric.name=Diamond helmet (Dyeable)
-item.dyeablediamond_chestplate_leatheric.name=Diamond chestplate (Dyeable)
-item.dyeablediamond_leggings_leatheric.name=Diamond leggings (Dyeable)
-item.dyeablediamond_boots_leatheric.name=Diamond boots (Dyeable)
+item.moredyeablearmors.dyeablediamond_helmet_leatheric.name=Diamond helmet (Dyeable)
+item.moredyeablearmors.dyeablediamond_chestplate_leatheric.name=Diamond Chestplate (Dyeable)
+item.moredyeablearmors.dyeablediamond_leggings_leatheric.name=Diamond Leggings (Dyeable)
+item.moredyeablearmors.dyeablediamond_boots_leatheric.name=Diamond Boots (Dyeable)
 
-item.dyeableiron_helmet_leatheric.name=Iron helmet (Dyeable)
-item.dyeableiron_chestplate_leatheric.name=Iron chestplate (Dyeable)
-item.dyeableiron_leggings_leatheric.name=Iron leggings (Dyeable)
-item.dyeableiron_boots_leatheric.name=Iron boots (Dyeable)
+item.moredyeablearmors.dyeableiron_helmet_leatheric.name=Iron helmet (Dyeable)
+item.moredyeablearmors.dyeableiron_chestplate_leatheric.name=Iron Chestplate (Dyeable)
+item.moredyeablearmors.dyeableiron_leggings_leatheric.name=Iron Leggings (Dyeable)
+item.moredyeablearmors.dyeableiron_boots_leatheric.name=Iron Boots (Dyeable)
 
-item.dyeablegold_helmet_leatheric.name=Gold helmet (Dyeable)
-item.dyeablegold_chestplate_leatheric.name=Gold chestplate (Dyeable)
-item.dyeablegold_leggings_leatheric.name=Gold leggings (Dyeable)
-item.dyeablegold_boots_leatheric.name=Gold boots (Dyeable)
+item.moredyeablearmors.dyeablegold_helmet_leatheric.name=Gold helmet (Dyeable)
+item.moredyeablearmors.dyeablegold_chestplate_leatheric.name=Gold Chestplate (Dyeable)
+item.moredyeablearmors.dyeablegold_leggings_leatheric.name=Gold Leggings (Dyeable)
+item.moredyeablearmors.dyeablegold_boots_leatheric.name=Gold Boots (Dyeable)
 
-texts.tooltip.camouflage=Dyed with Camouflage:
-texts.tooltip.camouflage.false=§bFalse
-texts.tooltip.camouflage.true=§bTrue
-texts.tooltip.moreinfo=§9§oHold SHIFT for more info
+texts.moredyeablearmors.tooltip.camouflage=Dyed with Camouflage:
+texts.moredyeablearmors.tooltip.camouflage.false=§bFalse
+texts.moredyeablearmors.tooltip.camouflage.true=§bTrue
+texts.moredyeablearmors.tooltip.moreinfo=§9§oHold SHIFT for more info
