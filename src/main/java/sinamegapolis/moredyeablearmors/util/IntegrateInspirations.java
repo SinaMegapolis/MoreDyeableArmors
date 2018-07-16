@@ -2,22 +2,13 @@ package sinamegapolis.moredyeablearmors.util;
 
 import knightminer.inspirations.library.InspirationsRegistry;
 import knightminer.inspirations.library.recipe.cauldron.ICauldronRecipe;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
-import sinamegapolis.moredyeablearmors.config.ModConfig;
 
-public class Integrations {
-    @GameRegistry.ObjectHolder("primitivemobs:camouflage_dye")
-    public static final Item CAMOUFLAGE_DYE = Items.AIR;
-
-    public static final String modId_inspirations = "inspirations";
-    public static final String modId_primitiveMobs = "primitivemobs";
-    public static boolean integrateWithInspirations(){
+public class IntegrateInspirations {
+	
+    public static boolean tryLoading(){
         try{
             InspirationsRegistry.addCauldronRecipe(new ICauldronRecipe() {
                 @Override
@@ -43,8 +34,9 @@ public class Integrations {
             });
             return true;
         }catch(Exception e){
-            MoreDyeableArmors.logger.error(e.getMessage());
+            MoreDyeableArmors.LOGGER.error(e.getMessage());
             return false;
         }
     }
+
 }
