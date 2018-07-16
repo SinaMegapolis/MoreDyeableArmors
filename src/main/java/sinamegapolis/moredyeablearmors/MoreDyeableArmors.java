@@ -12,7 +12,7 @@ public class MoreDyeableArmors
 {
     public static final String MODID = "moredyeablearmors";
     public static final String NAME = "More Dyeable Armors";
-    public static final String VERSION = "1.12.2-1.2.1";
+    public static final String VERSION = "1.12.2-1.3.0";
 
     public static final Logger LOGGER = LogManager.getLogger(MoreDyeableArmors.MODID);
 

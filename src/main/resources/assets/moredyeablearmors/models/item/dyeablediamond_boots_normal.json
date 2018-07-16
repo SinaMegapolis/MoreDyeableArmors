@@ -1,0 +1,7 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "items/diamond_boots",
+        "layer1": "moredyeablearmors:items/diamond_boots_overlay"
+    }
+}

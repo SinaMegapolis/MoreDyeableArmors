@@ -61,9 +61,7 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
         {
             ItemStack stack = inv.getStackInSlot(k);
 
-            if (!stack.isEmpty())
-            {
-                if (stack.getItem() instanceof ItemDyeableArmor)
+            if (!stack.isEmpty() && stack.getItem() instanceof ItemDyeableArmor)
                 {
                     itemarmor = (ItemDyeableArmor) stack.getItem();
 
@@ -80,7 +78,6 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
                         oldColor = itemarmor.getColor(itemstack);
                     }
                     break;
-                }
             }
         }
 

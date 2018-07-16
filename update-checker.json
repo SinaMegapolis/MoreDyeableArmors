@@ -1,13 +1,14 @@
 {
   "homepage": "https://minecraft.curseforge.com/projects/more-dyeable-armors/files",
   "1.12.2": {
+    "1.12.2-1.3.0": "optimized anf bugfixed inspirations integration, added overlay for chestplates and made exploits gone",
     "1.12.2-1.2.1": "added: update checker, integration with Primitive Mobs and a hidden easter egg :^)",
     "1.12.2-1.2.0": "added a config options that allows you to make dyeable armor snot look like leather armors(can wipe armors you have tho",
     "1.12.2-1.1.0": "Now you can dye your dyeable armors using Inspirations Better Cauldron too!",
     "1.12.2-1.0.0": "Actually the first version of the mod"
   },
   "promos": {
-    "1.12.2-latest": "1.12.2-1.2.1",
-    "1.12.2-recommended": "1.12.2-1.1.0"
+    "1.12.2-latest": "1.12.2-1.3.0",
+    "1.12.2-recommended": "1.12.2-1.3.0"
   }
 }

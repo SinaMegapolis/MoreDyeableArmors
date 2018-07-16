@@ -82,6 +82,7 @@ public class ModRegistry {
     	Ingredient string = Ingredient.fromItem(Items.STRING);
     	Ingredient leather = Ingredient.fromItems(Items.LEATHER);
     	Ingredient slime = Ingredient.fromItems(Items.SLIME_BALL);
+    	Ingredient water = Ingredient.fromItems(Items.WATER_BUCKET);
     	
        	for(Map.Entry<ItemArmor, ItemDyeableArmor> entry : ARMOR_MAP.entrySet()) {
        		ItemArmor base = entry.getKey();
@@ -90,6 +91,7 @@ public class ModRegistry {
                 GameRegistry.addShapelessRecipe(armor.getRegistryName(), null, new ItemStack(armor), string, leather, Ingredient.fromItems(base), slime);
             else
                 GameRegistry.addShapelessRecipe(armor.getRegistryName(), null, new ItemStack(armor), Ingredient.fromItems(base));
+            GameRegistry.addShapelessRecipe(new ResourceLocation(armor.getRegistryName()+"_clean"), null, new ItemStack(armor),water,Ingredient.fromItems(armor));
 
             if(Loader.isModLoaded(IntegrationHelper.PRIMITIVE_MOBS)){
                 GameRegistry.addShapelessRecipe(new ResourceLocation(armor.getRegistryName().toString() + "_camouflage"), null,
@@ -97,7 +99,7 @@ public class ModRegistry {
                         Ingredient.fromItems(PrimitiveMobsItems.CAMOUFLAGE_DYE),
                         Ingredient.fromItems(armor));
             }
-        };
+        }
 
         event.getRegistry().register(new ColorArmorRecipe().setRegistryName(MoreDyeableArmors.MODID, "armor_coloring"));
 
