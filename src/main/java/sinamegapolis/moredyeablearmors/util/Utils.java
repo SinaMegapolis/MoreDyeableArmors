@@ -1,10 +1,10 @@
 package sinamegapolis.moredyeablearmors.util;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
-import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
-import sinamegapolis.moredyeablearmors.config.ModConfig;
+import java.awt.Color;
+import java.util.EnumMap;
 
-import java.awt.*;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class Utils {
     public static int combineColors(int color1, int color2, int scale) {
@@ -52,13 +52,14 @@ public class Utils {
     public static int getIntFromARGBArray(int[] argb){
         return argb[0] << 24 | argb[1] << 16 | argb[2] << 8 | argb[3];
     }
-    public static ItemDyeableArmor getItemDyeableArmorBasedOnConfig(EntityEquipmentSlot slot, ItemDyeableArmor.ArmorMaterial normalArmorMaterial,
-                                                                    ItemDyeableArmor.ArmorMaterial leathericArmorMaterial, String name){
-        if(ModConfig.leathericArmor && leathericArmorMaterial!=null){
-            return new ItemDyeableArmor(leathericArmorMaterial,slot,name+"_leatheric");
-        }else if(!ModConfig.leathericArmor && normalArmorMaterial!=null){
-            return new ItemDyeableArmor(normalArmorMaterial,slot,name);
-        }
-        return null;
+    
+    static EnumMap<EnumDyeColor, Integer> colors = new EnumMap<>(EnumDyeColor.class);
+    static {
+		for(EnumDyeColor e : EnumDyeColor.values())
+			colors.put(e, ReflectionHelper.getPrivateValue(EnumDyeColor.class, e, "field_193351_w", "colorValue"));
+    }
+    
+    public static int getColorFromColor(EnumDyeColor color) {
+    	return colors.get(color);
     }
 }
