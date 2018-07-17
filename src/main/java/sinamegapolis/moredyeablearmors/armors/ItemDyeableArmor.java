@@ -1,13 +1,7 @@
 package sinamegapolis.moredyeablearmors.armors;
 
-import java.awt.*;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
@@ -16,7 +10,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,6 +26,9 @@ import sinamegapolis.moredyeablearmors.init.IHasModel;
 import sinamegapolis.moredyeablearmors.init.ModRegistry;
 import sinamegapolis.moredyeablearmors.util.IntegrationHelper;
 import sinamegapolis.moredyeablearmors.util.Utils;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * This is just a version of ItemArmor that allows every armor to be colored

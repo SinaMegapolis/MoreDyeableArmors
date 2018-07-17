@@ -1,11 +1,6 @@
 package sinamegapolis.moredyeablearmors.init;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
-
 import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -27,6 +22,9 @@ import sinamegapolis.moredyeablearmors.config.ModConfig;
 import sinamegapolis.moredyeablearmors.util.ColorArmorRecipe;
 import sinamegapolis.moredyeablearmors.util.IntegrateInspirations;
 import sinamegapolis.moredyeablearmors.util.IntegrationHelper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = MoreDyeableArmors.MODID)
 public class ModRegistry {
