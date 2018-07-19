@@ -114,7 +114,8 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
                 tick(stack);
             }
             else {
-                this.setColor(stack, Utils.addHueDegreesToColor(this.getColor(stack), 5));
+                float[] hsb = Utils.getHSB(this.getColor(stack));
+                this.setColor(stack, Utils.setHSB(this.getColor(stack), hsb[0]+5, hsb[1], hsb[2]));
                 stack.damageItem(1, player);
             }
         }else {

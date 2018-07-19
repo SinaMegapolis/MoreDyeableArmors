@@ -2,6 +2,8 @@ package sinamegapolis.moredyeablearmors.init;
 
 import com.google.common.collect.ImmutableMap;
 import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -11,11 +13,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
@@ -81,7 +86,7 @@ public class ModRegistry {
     	Ingredient leather = Ingredient.fromItems(Items.LEATHER);
     	Ingredient slime = Ingredient.fromItems(Items.SLIME_BALL);
     	Ingredient water = Ingredient.fromItems(Items.WATER_BUCKET);
-    	
+
        	for(Map.Entry<ItemArmor, ItemDyeableArmor> entry : ARMOR_MAP.entrySet()) {
        		ItemArmor base = entry.getKey();
        		ItemDyeableArmor armor = entry.getValue();
@@ -105,5 +110,10 @@ public class ModRegistry {
             if(!IntegrateInspirations.tryLoading())
                 MoreDyeableArmors.LOGGER.warn("Inspirations is present but for some reason the mod can't integrate with it, please make a github issue with the full log if you want it to get fixed");
         }
+    }
+
+    @SubscribeEvent
+    public static void attachCaps(AttachCapabilitiesEvent<ItemStack> event){
+
     }
 }

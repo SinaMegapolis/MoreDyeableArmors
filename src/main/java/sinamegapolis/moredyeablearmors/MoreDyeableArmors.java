@@ -4,8 +4,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sinamegapolis.moredyeablearmors.capability.packet.CMessageArmorColored;
+import sinamegapolis.moredyeablearmors.capability.packet.MDAPacketHandler;
 
 @Mod(modid = MoreDyeableArmors.MODID, name = MoreDyeableArmors.NAME, version = MoreDyeableArmors.VERSION, updateJSON = "https://raw.githubusercontent.com/SinaMegapolis/MoreDyeableArmors/master/update-checker.json")
 public class MoreDyeableArmors
@@ -18,6 +21,7 @@ public class MoreDyeableArmors
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e){
+        MDAPacketHandler.INSTANCE.registerMessage(CMessageArmorColored.ArmorColoredMessageHandler.class, CMessageArmorColored.class, 1, Side.CLIENT);
     }
 
     @Mod.EventHandler
