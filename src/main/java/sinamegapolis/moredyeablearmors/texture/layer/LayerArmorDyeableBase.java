@@ -82,8 +82,10 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
                         this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, "overlay"));
                     }
                     // Non-colored
-                    GlStateManager.color(this.colorR, this.colorG, this.colorB, this.alpha);
-                    t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+                    else {
+                        GlStateManager.color(this.colorR, this.colorG, this.colorB, this.alpha);
+                        t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+                    }
                     if (!this.skipRenderGlint && itemstack.hasEffect())
                     {
                         renderEnchantedGlint(this.renderer, entityLivingBaseIn, t, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);

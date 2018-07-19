@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.oredict.DyeUtils;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
+import sinamegapolis.moredyeablearmors.capability.Capabilities;
 
 public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
@@ -97,8 +98,14 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
         if (itemarmor == null || newColor == -1) return ItemStack.EMPTY;
         else
         {
-            if(oldColor == -1 || oldColor == itemarmor.getDefaultColor()) itemarmor.setColor(itemstack, newColor);
-            else itemarmor.setColor(itemstack, Utils.combineColors(oldColor, newColor, 1));
+            if(oldColor == -1 || oldColor == itemarmor.getDefaultColor()) {
+                itemarmor.setColor(itemstack, newColor);
+                itemstack.getCapability(Capabilities.DYEABLE, null).setColor(newColor);
+            }
+            else {
+                itemarmor.setColor(itemstack, Utils.combineColors(oldColor, newColor, 1));
+                itemstack.getCapability(Capabilities.DYEABLE, null).setColor(Utils.combineColors(oldColor, newColor, 1));
+            }
             return itemstack;
         }
     }

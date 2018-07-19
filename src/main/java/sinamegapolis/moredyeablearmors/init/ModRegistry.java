@@ -14,6 +14,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -23,7 +24,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
+import sinamegapolis.moredyeablearmors.capability.Capabilities;
+import sinamegapolis.moredyeablearmors.capability.CapabilityProvider;
+import sinamegapolis.moredyeablearmors.capability.DyeableCapability;
+import sinamegapolis.moredyeablearmors.capability.IDyeable;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
+import sinamegapolis.moredyeablearmors.texture.layer.LayerArmorDyeableBase;
 import sinamegapolis.moredyeablearmors.util.ColorArmorRecipe;
 import sinamegapolis.moredyeablearmors.util.IntegrateInspirations;
 import sinamegapolis.moredyeablearmors.util.IntegrationHelper;
@@ -114,6 +120,9 @@ public class ModRegistry {
 
     @SubscribeEvent
     public static void attachCaps(AttachCapabilitiesEvent<ItemStack> event){
-
+        ItemStack stack = event.getObject();
+        if(stack.getItem() instanceof ItemArmor){
+            event.addCapability(new ResourceLocation(MoreDyeableArmors.MODID, "dyeable"), new CapabilityProvider<IDyeable>(Capabilities.DYEABLE));
+        }
     }
 }

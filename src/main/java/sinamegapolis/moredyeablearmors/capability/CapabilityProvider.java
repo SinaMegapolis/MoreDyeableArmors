@@ -12,7 +12,6 @@ public class CapabilityProvider<C> implements ICapabilitySerializable<NBTBase> {
 
     /**
      * Pass the Capbility this is for.
-     * @param capability
      */
     public CapabilityProvider(Capability<C> capability){
         this.capability = capability;
