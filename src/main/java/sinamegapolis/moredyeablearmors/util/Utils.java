@@ -81,6 +81,23 @@ public class Utils {
         return coloredImage;
     }
 
+    //used for texture overlay
+    //TODO: merge this with whitify
+    public static BufferedImage turnIntoGoodTexture(BufferedImage whiteImage, int color){
+        for (int i = 0; i < whiteImage.getWidth(); i++) {
+            for (int j = 0; j < whiteImage.getHeight(); j++) {
+                int rgb = whiteImage.getRGB(i, j);
+                if(getARGBArrayFromInt(rgb)[0]>0){
+                    float[] hsb = getHSB(rgb);
+                    float[] colorhsb = getHSB(color);
+                    int goodColor = setHSB(rgb, colorhsb[0], hsb[1], hsb[2]);
+                    whiteImage.setRGB(i, j, goodColor);
+                }
+            }
+        }
+        return whiteImage;
+    }
+
     /**
      * this method is taken from stackoverflow https://bit.ly/2uzFw7j
      * deep copies an BufferedImage

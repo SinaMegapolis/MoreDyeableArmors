@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelManager;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -14,7 +16,10 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -29,6 +34,8 @@ import sinamegapolis.moredyeablearmors.capability.CapabilityProvider;
 import sinamegapolis.moredyeablearmors.capability.DyeableCapability;
 import sinamegapolis.moredyeablearmors.capability.IDyeable;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
+import sinamegapolis.moredyeablearmors.model.ItemArmorWithOverlay;
+import sinamegapolis.moredyeablearmors.texture.ItemArmorOverlayTextureHandler;
 import sinamegapolis.moredyeablearmors.texture.layer.LayerArmorDyeableBase;
 import sinamegapolis.moredyeablearmors.util.ColorArmorRecipe;
 import sinamegapolis.moredyeablearmors.util.IntegrateInspirations;
@@ -81,6 +88,8 @@ public class ModRegistry {
              .put(Items.DIAMOND_BOOTS, DIAMOND_BOOTS)
              .build();
 
+    private static ArrayList<ItemArmorOverlayTextureHandler> textureHandlerList;
+
     @SubscribeEvent
     public static void onItemRegister(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(ITEMS.toArray(new Item[0]));
@@ -109,6 +118,9 @@ public class ModRegistry {
                         Ingredient.fromItems(armor));
             }
         }
+        ItemStack stack = new ItemStack(Items.DIAMOND_BOOTS);
+       	stack.getCapability(Capabilities.DYEABLE, null).setColor(0xF67882);
+       	GameRegistry.addShapelessRecipe(new ResourceLocation("mawmytestrecipedontenter"), null, stack,Ingredient.fromItems(Items.LEATHER),Ingredient.fromItems(Items.DIAMOND_BOOTS));
 
         event.getRegistry().register(new ColorArmorRecipe().setRegistryName(MoreDyeableArmors.MODID, "armor_coloring"));
 
@@ -122,7 +134,28 @@ public class ModRegistry {
     public static void attachCaps(AttachCapabilitiesEvent<ItemStack> event){
         ItemStack stack = event.getObject();
         if(stack.getItem() instanceof ItemArmor){
-            event.addCapability(new ResourceLocation(MoreDyeableArmors.MODID, "dyeable"), new CapabilityProvider<IDyeable>(Capabilities.DYEABLE));
+            event.addCapability(new ResourceLocation(MoreDyeableArmors.MODID, "dyeable"), new CapabilityProvider<>(Capabilities.DYEABLE));
         }
+    }
+
+    @SubscribeEvent
+    public static void onModelBake(ModelBakeEvent event){
+        ModelResourceLocation diaBootsLoc = new ModelResourceLocation(new ResourceLocation("minecraft","diamond_boots"),"inventory");
+        IBakedModel diaBoots = event.getModelManager().getModel(diaBootsLoc);
+        event.getModelRegistry().putObject(diaBootsLoc, new ItemArmorWithOverlay(diaBoots,"diamond"));
+    }
+
+    @SubscribeEvent
+    public static void onTextureStitch(TextureStitchEvent.Pre event){
+        textureHandlerList = new ArrayList<>();
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0x33EBCB,event.getMap(),"diamond"));
+    }
+
+    public static ItemArmorOverlayTextureHandler getItemTextureHandler(String name){
+        for (ItemArmorOverlayTextureHandler handler : textureHandlerList) {
+            if(handler.getArmorName().equalsIgnoreCase(name))
+                return handler;
+        }
+        return null;
     }
 }

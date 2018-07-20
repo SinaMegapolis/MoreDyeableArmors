@@ -8,8 +8,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
+import sinamegapolis.moredyeablearmors.capability.Capabilities;
 import sinamegapolis.moredyeablearmors.init.IHasModel;
 import sinamegapolis.moredyeablearmors.init.ModRegistry;
+import sun.misc.Cache;
 
 @Mod.EventBusSubscriber(modid = MoreDyeableArmors.MODID, value = Side.CLIENT)
 public class ClientRegistry {
@@ -28,6 +30,8 @@ public class ClientRegistry {
     	            if(tint==0){
     	                if(armor.hasColor(stack))
     	                    return armor.getColor(stack);
+    	                else if(stack.hasCapability(Capabilities.DYEABLE, null) && stack.getCapability(Capabilities.DYEABLE, null).getColor()!=250)
+    	                	return stack.getCapability(Capabilities.DYEABLE, null).getColor();
     	                else
     	                    return armor.getDefaultColor();
     	            }

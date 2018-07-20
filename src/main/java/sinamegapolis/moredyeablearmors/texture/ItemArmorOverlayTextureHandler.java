@@ -1,0 +1,69 @@
+package sinamegapolis.moredyeablearmors.texture;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.*;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.StringUtils;
+import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
+import sinamegapolis.moredyeablearmors.util.OverlayTextureAtlasSprite;
+import sinamegapolis.moredyeablearmors.util.Utils;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+public class ItemArmorOverlayTextureHandler {
+    TextureAtlasSprite helmetOverlay;
+    TextureAtlasSprite chestplateOverlay = null;
+    TextureAtlasSprite leggingsOverlay;
+    TextureAtlasSprite bootsOverlay;
+    private String armorName;
+    private IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
+    TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+    private BufferedImage helmetOverlayImage;
+    //todo: make the texture handler also handle for leatheric armors
+    BufferedImage chestplateOverlayImage;
+    private BufferedImage leggingsOverlayImage;
+    private BufferedImage bootsOverlayImage;
+    {
+        try {
+            helmetOverlayImage = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(MoreDyeableArmors.MODID,"textures/items/default_helmet_overlay.png")).getInputStream());
+            leggingsOverlayImage = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(MoreDyeableArmors.MODID,"textures/items/default_leggings_overlay.png")).getInputStream());
+            bootsOverlayImage = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(MoreDyeableArmors.MODID,"textures/items/leather_boots_overlay.png")).getInputStream());
+        } catch (IOException e) {
+            MoreDyeableArmors.LOGGER.error("Item Armor Overlay Texture handler can't initialize itself :ohno:");
+            MoreDyeableArmors.LOGGER.error("Report this error to creator (SinaMegapolis) on github https://bit.ly/2muE81e");
+            e.printStackTrace();
+        }
+    }
+
+    public ItemArmorOverlayTextureHandler(int color, TextureMap map, String armorName){
+        this.armorName = armorName;
+        helmetOverlay = new OverlayTextureAtlasSprite(armorName+"_helmet_overlay",Utils.turnIntoGoodTexture(helmetOverlayImage, color));
+        map.setTextureEntry(helmetOverlay);
+        leggingsOverlay = new OverlayTextureAtlasSprite(armorName+"_leggings_overlay", Utils.turnIntoGoodTexture(leggingsOverlayImage, color));
+        map.setTextureEntry(leggingsOverlay);
+        bootsOverlay = new OverlayTextureAtlasSprite(armorName+"_boots_overlay", Utils.turnIntoGoodTexture(bootsOverlayImage, color));
+        map.setTextureEntry(bootsOverlay);
+    }
+
+    private ResourceLocation turnImageIntoResourceLoc(String name, BufferedImage image){
+        return new ResourceLocation(StringUtils.remove(textureManager.getDynamicTextureLocation(name, new DynamicTexture(image)).toString(),"png" ));
+    }
+
+    public TextureAtlasSprite getBootsOverlay() {
+        return bootsOverlay;
+    }
+
+    public TextureAtlasSprite getHelmetOverlay() {
+        return helmetOverlay;
+    }
+
+    public TextureAtlasSprite getLeggingsOverlay() {
+        return leggingsOverlay;
+    }
+
+    public String getArmorName() {
+        return armorName;
+    }
+}

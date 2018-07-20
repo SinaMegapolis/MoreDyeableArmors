@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
@@ -27,7 +28,7 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
 
             if (!itemstack1.isEmpty())
             {
-                if (itemstack1.getItem() instanceof ItemDyeableArmor)
+                if (itemstack1.getItem() instanceof ItemArmor)
                 {
                     if (!itemstack.isEmpty())
                     {
@@ -54,7 +55,7 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
         ItemStack itemstack = ItemStack.EMPTY;
-        ItemDyeableArmor itemarmor = null;
+        ItemArmor itemarmor = null;
         int oldColor = -1;
         int newColor = -1;
         
@@ -62,9 +63,9 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
         {
             ItemStack stack = inv.getStackInSlot(k);
 
-            if (!stack.isEmpty() && stack.getItem() instanceof ItemDyeableArmor)
+            if (!stack.isEmpty() && stack.getItem() instanceof ItemArmor)
                 {
-                    itemarmor = (ItemDyeableArmor) stack.getItem();
+                    itemarmor = (ItemArmor) stack.getItem();
 
                     if (!itemstack.isEmpty())
                     {
@@ -74,9 +75,9 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
                     itemstack = stack.copy();
                     itemstack.setCount(1);
 
-                    if (itemarmor.hasColor(stack))
+                    if (itemstack.hasCapability(Capabilities.DYEABLE, null) && itemstack.getCapability(Capabilities.DYEABLE, null).getColor()!=250)
                     {
-                        oldColor = itemarmor.getColor(itemstack);
+                        oldColor = itemstack.getCapability(Capabilities.DYEABLE, null).getColor();
                     }
                     break;
             }
@@ -98,12 +99,10 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
         if (itemarmor == null || newColor == -1) return ItemStack.EMPTY;
         else
         {
-            if(oldColor == -1 || oldColor == itemarmor.getDefaultColor()) {
-                itemarmor.setColor(itemstack, newColor);
+            if(oldColor == -1 || oldColor == 10511680) {
                 itemstack.getCapability(Capabilities.DYEABLE, null).setColor(newColor);
             }
             else {
-                itemarmor.setColor(itemstack, Utils.combineColors(oldColor, newColor, 1));
                 itemstack.getCapability(Capabilities.DYEABLE, null).setColor(Utils.combineColors(oldColor, newColor, 1));
             }
             return itemstack;
