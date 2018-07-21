@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
+import sinamegapolis.moredyeablearmors.capability.Capabilities;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
 import sinamegapolis.moredyeablearmors.init.IHasModel;
 import sinamegapolis.moredyeablearmors.init.ModRegistry;
@@ -41,10 +42,10 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
     private static final String DISPLAY_TAG = "display";
     private static final String TICKS_TAG = "ticks";
 
-    public ItemDyeableArmor(ArmorMaterial material, EntityEquipmentSlot slot, String name) {
+    public ItemDyeableArmor(ArmorMaterial material, EntityEquipmentSlot slot, ResourceLocation registryName) {
         super(material, 0, slot);
-        setRegistryName(MoreDyeableArmors.MODID, name);
-        setUnlocalizedName(MoreDyeableArmors.MODID + "." + name);
+        setRegistryName(registryName);
+        setUnlocalizedName("helmetGold");
         setCreativeTab(CreativeTabs.COMBAT);
         ModRegistry.ITEMS.add(this);
         this.setMaxDamage(material.getDurability(slot));
@@ -55,32 +56,23 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
         ModelLoader.setCustomMeshDefinition(this,(ItemStack stack)->{
             ItemDyeableArmor itemarmor = (ItemDyeableArmor) stack.getItem();
             if(ModConfig.leathericArmor)
-                return new ModelResourceLocation(new ResourceLocation(getRegistryName().toString()+"_leatheric"), "inventory");
+                return new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()+"_leatheric"), "inventory");
             return (!this.hasColor(stack)) &&
                     !ModConfig.leathericArmor &&
                     (itemarmor.getArmorMaterial()==ArmorMaterial.GOLD || itemarmor.getArmorMaterial()==ArmorMaterial.DIAMOND)
-            ? new ModelResourceLocation(new ResourceLocation(getRegistryName().toString()+"_normal"), "inventory")
-                    : new ModelResourceLocation(getRegistryName(), "inventory");
+            ? new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()+"_normal"), "inventory")
+                    : new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()), "inventory");
         } );
         ModelBakery.registerItemVariants(this,
-                new ModelResourceLocation(new ResourceLocation(getRegistryName().toString()+"_normal"), "inventory"),
-                new ModelResourceLocation(getRegistryName(), "inventory"),
-                new ModelResourceLocation(new ResourceLocation(getRegistryName().toString()+"_leatheric"),"inventory"));
+                new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()+"_normal"), "inventory"),
+                new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()), "inventory"),
+                new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()+"_leatheric"),"inventory"));
     }
 
     @Override
     public int getColor(ItemStack stack) {
-        NBTTagCompound tag = stack.getTagCompound();
-
-        if (tag != null)
-        {
-            NBTTagCompound displayTag = tag.getCompoundTag(DISPLAY_TAG);
-
-            if (displayTag != null && displayTag.hasKey(COLOR_TAG, Constants.NBT.TAG_INT))
-            {
-                return displayTag.getInteger(COLOR_TAG);
-            }
-        }
+        if(hasColor(stack))
+            return stack.getCapability(Capabilities.DYEABLE, null).getColor();
 
         return getDefaultColor();
     }
@@ -92,13 +84,12 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
 
     @Override
     public boolean hasColor(ItemStack stack) {
-        NBTTagCompound tag = stack.getOrCreateSubCompound(DISPLAY_TAG);
-        return tag.hasKey(COLOR_TAG, Constants.NBT.TAG_INT);
+        return stack.hasCapability(Capabilities.DYEABLE, null);
     }
 
     @Override
     public void setColor(ItemStack stack, int color) {
-        stack.getOrCreateSubCompound(DISPLAY_TAG).setInteger(COLOR_TAG, color);
+        stack.getCapability(Capabilities.DYEABLE, null);
     }
 
     public int getDefaultColor(){

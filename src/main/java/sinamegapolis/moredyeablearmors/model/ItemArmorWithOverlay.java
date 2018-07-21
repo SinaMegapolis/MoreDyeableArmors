@@ -1,8 +1,11 @@
 package sinamegapolis.moredyeablearmors.model;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -12,7 +15,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import sinamegapolis.moredyeablearmors.capability.Capabilities;
+import sinamegapolis.moredyeablearmors.config.ModConfig;
 import sinamegapolis.moredyeablearmors.init.ModRegistry;
+import sinamegapolis.moredyeablearmors.texture.ItemArmorOverlayTextureHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -21,18 +26,21 @@ public class ItemArmorWithOverlay extends BakedModelWrapper<IBakedModel> {
     private IBakedModel armor;
     private String armorName;
     private ImmutableList<BakedQuad> gurls = null;
-    private ItemStack stack;
+    private EntityEquipmentSlot slot;
     private boolean shouldRenderOverlay = false;
-    public ItemArmorWithOverlay(IBakedModel armor, String armorName){
+    private ItemStack stack;
+    public ItemArmorWithOverlay(IBakedModel armor, String armorName, EntityEquipmentSlot slot){
         super(armor);
         this.armor = armor;
         this.armorName = armorName;
+        this.slot = slot;
     }
-    public ItemArmorWithOverlay(IBakedModel armor, String armorName, boolean shouldRenderOverlay){
+    public ItemArmorWithOverlay(IBakedModel armor, String armorName, boolean shouldRenderOverlay, EntityEquipmentSlot slot){
         super(armor);
         this.armor = armor;
         this.armorName = armorName;
         this.shouldRenderOverlay = shouldRenderOverlay;
+        this.slot = slot;
     }
     @Override
     public Pair<? extends IBakedModel, javax.vecmath.Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
@@ -43,14 +51,18 @@ public class ItemArmorWithOverlay extends BakedModelWrapper<IBakedModel> {
         if(side==null){
             if(gurls==null){
                 ImmutableList.Builder<BakedQuad> gurl = ImmutableList.builder();
-                TextureAtlasSprite sprite = ModRegistry.getItemTextureHandler(armorName).getBootsOverlay();
+                TextureAtlasSprite spriteOverlay = null;
+                TextureAtlasSprite spriteNormal = null;
+                spriteNormal = setTASesAccordingToSlot(spriteNormal, spriteOverlay)[0];
+                spriteOverlay = setTASesAccordingToSlot(spriteNormal, spriteOverlay)[1];
                 //TODO: design a way to merge texture atlas sprites with each other
-                gurl.addAll(armor.getQuads(state, side, rand));
                 if(shouldRenderOverlay) {
                     for (BakedQuad quad : armor.getQuads(state, side, rand)) {
-                        gurl.add(new BakedQuadRetextured(quad, sprite));
+                        gurl.add(new BakedQuadRetextured(quad,spriteNormal));
+                        if(slot!=EntityEquipmentSlot.CHEST || ModConfig.leathericArmor)
+                            gurl.add(new BakedQuadRetextured(new BakedQuad(quad.getVertexData(),1,quad.getFace(),quad.getSprite(),quad.shouldApplyDiffuseLighting(),quad.getFormat()),spriteOverlay));
                     }
-                }
+                }else gurl.addAll(armor.getQuads(state, side, rand));
                 gurls = gurl.build();
             }
             return gurls;
@@ -86,16 +98,53 @@ public class ItemArmorWithOverlay extends BakedModelWrapper<IBakedModel> {
         return armor;
     }
 
+    public EntityEquipmentSlot getSlot() {
+        return slot;
+    }
+
     @Override
     public ItemOverrideList getOverrides() {
         return new ItemOverrideList(super.getOverrides().getOverrides()){
             @Override
             public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity) {
-                if(stack.getCapability(Capabilities.DYEABLE, null).getColor()!=250) {
-                    return new ItemArmorWithOverlay(((ItemArmorWithOverlay)originalModel).getArmor(),((ItemArmorWithOverlay)originalModel).getArmorName(),true);
+                int color = stack.getCapability(Capabilities.DYEABLE, null).getColor();
+                if(color!=250) {
+                    return new ItemArmorWithOverlay(((ItemArmorWithOverlay)originalModel).getArmor(),((ItemArmorWithOverlay)originalModel).getArmorName(),true,((ItemArmorWithOverlay)originalModel).getSlot());
                 }
                 return super.handleItemState(originalModel, stack, world, entity);
             }
         };
+    }
+
+    private TextureAtlasSprite[] setTASesAccordingToSlot(TextureAtlasSprite normalSprite, TextureAtlasSprite overlaySprite){
+        ItemArmorOverlayTextureHandler handler = ModRegistry.getItemTextureHandler(armorName);
+        switch (slot){
+            case FEET:
+                normalSprite = handler.getBoots();
+                break;
+            case LEGS:
+                normalSprite = handler.getLeggings();
+                break;
+            case CHEST:
+                normalSprite = handler.getChestplate();
+                break;
+            case HEAD:
+                normalSprite = handler.getHelmet();
+                break;
+        }
+        if(shouldRenderOverlay){
+            switch (slot){
+                case HEAD:
+                    overlaySprite = handler.getHelmetOverlay();
+                    break;
+                case LEGS:
+                    overlaySprite = handler.getLeggingsOverlay();
+                    break;
+                case FEET:
+                    overlaySprite = handler.getBootsOverlay();
+                    break;
+            }
+        }
+        return new TextureAtlasSprite[]{normalSprite, overlaySprite};
     }
 }

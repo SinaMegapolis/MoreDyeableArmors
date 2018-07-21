@@ -2,6 +2,8 @@ package sinamegapolis.moredyeablearmors.init;
 
 import com.google.common.collect.ImmutableMap;
 import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelManager;
@@ -48,47 +50,9 @@ import java.util.Map;
 public class ModRegistry {
 
     public static final List<Item> ITEMS = new ArrayList<>(16);
-
-    public static final ItemDyeableArmor CHAIN_HELMET = new ItemDyeableArmor(ArmorMaterial.CHAIN, EntityEquipmentSlot.HEAD, "dyeablechainmail_helmet");
-    public static final ItemDyeableArmor CHAIN_CHESTPLATE = new ItemDyeableArmor(ArmorMaterial.CHAIN, EntityEquipmentSlot.CHEST, "dyeablechainmail_chestplate");
-    public static final ItemDyeableArmor CHAIN_LEGGINGS = new ItemDyeableArmor(ArmorMaterial.CHAIN, EntityEquipmentSlot.LEGS, "dyeablechainmail_leggings");
-    public static final ItemDyeableArmor CHAIN_BOOTS = new ItemDyeableArmor(ArmorMaterial.CHAIN, EntityEquipmentSlot.FEET, "dyeablechainmail_boots");
-
-    public static final ItemDyeableArmor IRON_HELMET = new ItemDyeableArmor(ArmorMaterial.IRON, EntityEquipmentSlot.HEAD, "dyeableiron_helmet");
-    public static final ItemDyeableArmor IRON_CHESTPLATE = new ItemDyeableArmor(ArmorMaterial.IRON, EntityEquipmentSlot.CHEST, "dyeableiron_chestplate");
-    public static final ItemDyeableArmor IRON_LEGGINGS = new ItemDyeableArmor(ArmorMaterial.IRON, EntityEquipmentSlot.LEGS, "dyeableiron_leggings");
-    public static final ItemDyeableArmor IRON_BOOTS = new ItemDyeableArmor(ArmorMaterial.IRON, EntityEquipmentSlot.FEET, "dyeableiron_boots");
-    
-    public static final ItemDyeableArmor GOLD_HELMET = new ItemDyeableArmor(ArmorMaterial.GOLD, EntityEquipmentSlot.HEAD, "dyeablegold_helmet");
-    public static final ItemDyeableArmor GOLD_CHESTPLATE = new ItemDyeableArmor(ArmorMaterial.GOLD, EntityEquipmentSlot.CHEST, "dyeablegold_chestplate");
-    public static final ItemDyeableArmor GOLD_LEGGINGS = new ItemDyeableArmor(ArmorMaterial.GOLD, EntityEquipmentSlot.LEGS, "dyeablegold_leggings");
-    public static final ItemDyeableArmor GOLD_BOOTS = new ItemDyeableArmor(ArmorMaterial.GOLD, EntityEquipmentSlot.FEET, "dyeablegold_boots");
-
-    public static final ItemDyeableArmor DIAMOND_HELMET = new ItemDyeableArmor(ArmorMaterial.DIAMOND, EntityEquipmentSlot.HEAD,  "dyeablediamond_helmet");
-    public static final ItemDyeableArmor DIAMOND_CHESTPLATE = new ItemDyeableArmor(ArmorMaterial.DIAMOND, EntityEquipmentSlot.CHEST, "dyeablediamond_chestplate");
-    public static final ItemDyeableArmor DIAMOND_LEGGINGS = new ItemDyeableArmor(ArmorMaterial.DIAMOND, EntityEquipmentSlot.LEGS, "dyeablediamond_leggings");
-    public static final ItemDyeableArmor DIAMOND_BOOTS = new ItemDyeableArmor(ArmorMaterial.DIAMOND, EntityEquipmentSlot.FEET, "dyeablediamond_boots");
-
-    public static final ImmutableMap<ItemArmor, ItemDyeableArmor> ARMOR_MAP = new ImmutableMap.Builder<ItemArmor, ItemDyeableArmor>()
-             .put(Items.CHAINMAIL_HELMET, CHAIN_HELMET)
-             .put(Items.CHAINMAIL_CHESTPLATE, CHAIN_CHESTPLATE)
-             .put(Items.CHAINMAIL_LEGGINGS, CHAIN_LEGGINGS)
-             .put(Items.CHAINMAIL_BOOTS, CHAIN_BOOTS)
-    		 .put(Items.IRON_HELMET, IRON_HELMET)
-             .put(Items.IRON_CHESTPLATE, IRON_CHESTPLATE)
-             .put(Items.IRON_LEGGINGS, IRON_LEGGINGS)
-             .put(Items.IRON_BOOTS, IRON_BOOTS)
-             .put(Items.GOLDEN_HELMET, GOLD_HELMET)
-             .put(Items.GOLDEN_CHESTPLATE, GOLD_CHESTPLATE)
-             .put(Items.GOLDEN_LEGGINGS, GOLD_LEGGINGS)
-             .put(Items.GOLDEN_BOOTS, GOLD_BOOTS)
-             .put(Items.DIAMOND_HELMET, DIAMOND_HELMET)
-             .put(Items.DIAMOND_CHESTPLATE, DIAMOND_CHESTPLATE)
-             .put(Items.DIAMOND_LEGGINGS, DIAMOND_LEGGINGS)
-             .put(Items.DIAMOND_BOOTS, DIAMOND_BOOTS)
-             .build();
-
+    public static Item GOLD_HELMET = new ItemDyeableArmor(ArmorMaterial.GOLD,EntityEquipmentSlot.HEAD,new ResourceLocation("minecraft","golden_helmet"));
     private static ArrayList<ItemArmorOverlayTextureHandler> textureHandlerList;
+    public static ArrayList<ItemArmor> armorList = new ArrayList<>();
 
     @SubscribeEvent
     public static void onItemRegister(RegistryEvent.Register<Item> event) {
@@ -101,26 +65,6 @@ public class ModRegistry {
     	Ingredient leather = Ingredient.fromItems(Items.LEATHER);
     	Ingredient slime = Ingredient.fromItems(Items.SLIME_BALL);
     	Ingredient water = Ingredient.fromItems(Items.WATER_BUCKET);
-
-       	for(Map.Entry<ItemArmor, ItemDyeableArmor> entry : ARMOR_MAP.entrySet()) {
-       		ItemArmor base = entry.getKey();
-       		ItemDyeableArmor armor = entry.getValue();
-            if(ModConfig.leathericArmor) 
-                GameRegistry.addShapelessRecipe(armor.getRegistryName(), null, new ItemStack(armor), string, leather, Ingredient.fromItems(base), slime);
-            else
-                GameRegistry.addShapelessRecipe(armor.getRegistryName(), null, new ItemStack(armor), Ingredient.fromItems(base));
-            GameRegistry.addShapelessRecipe(new ResourceLocation(armor.getRegistryName()+"_clean"), null, new ItemStack(armor),water,Ingredient.fromItems(armor));
-
-            if(Loader.isModLoaded(IntegrationHelper.PRIMITIVE_MOBS)){
-                GameRegistry.addShapelessRecipe(new ResourceLocation(armor.getRegistryName().toString() + "_camouflage"), null,
-                        armor.setRainbow(true, new ItemStack(armor)),
-                        Ingredient.fromItems(PrimitiveMobsItems.CAMOUFLAGE_DYE),
-                        Ingredient.fromItems(armor));
-            }
-        }
-        ItemStack stack = new ItemStack(Items.DIAMOND_BOOTS);
-       	stack.getCapability(Capabilities.DYEABLE, null).setColor(0xF67882);
-       	GameRegistry.addShapelessRecipe(new ResourceLocation("mawmytestrecipedontenter"), null, stack,Ingredient.fromItems(Items.LEATHER),Ingredient.fromItems(Items.DIAMOND_BOOTS));
 
         event.getRegistry().register(new ColorArmorRecipe().setRegistryName(MoreDyeableArmors.MODID, "armor_coloring"));
 
@@ -140,15 +84,19 @@ public class ModRegistry {
 
     @SubscribeEvent
     public static void onModelBake(ModelBakeEvent event){
-        ModelResourceLocation diaBootsLoc = new ModelResourceLocation(new ResourceLocation("minecraft","diamond_boots"),"inventory");
-        IBakedModel diaBoots = event.getModelManager().getModel(diaBootsLoc);
-        event.getModelRegistry().putObject(diaBootsLoc, new ItemArmorWithOverlay(diaBoots,"diamond"));
+        registerArmorSetModel("minecraft", "diamond", event, new ItemArmor[]{Items.DIAMOND_HELMET,Items.DIAMOND_CHESTPLATE,Items.DIAMOND_LEGGINGS,Items.DIAMOND_BOOTS});
+        registerArmorSetModel("minecraft", "chainmail", event, new ItemArmor[]{Items.CHAINMAIL_HELMET,Items.CHAINMAIL_CHESTPLATE,Items.CHAINMAIL_LEGGINGS,Items.CHAINMAIL_BOOTS});
+        registerArmorSetModel("minecraft", "iron", event, new ItemArmor[]{Items.IRON_HELMET,Items.IRON_CHESTPLATE,Items.IRON_LEGGINGS,Items.IRON_BOOTS});
+
     }
 
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event){
         textureHandlerList = new ArrayList<>();
-        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0x33EBCB,event.getMap(),"diamond"));
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0x33EBCB, event.getMap(), "diamond", "minecraft"));
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xC6C6C6, event.getMap(), "chainmail", "minecraft"));
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xEAEE57, event.getMap(), "gold", "minecraft"));
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xC6C6C6, event.getMap(), "iron", "minecraft"));
     }
 
     public static ItemArmorOverlayTextureHandler getItemTextureHandler(String name){
@@ -157,5 +105,31 @@ public class ModRegistry {
                 return handler;
         }
         return null;
+    }
+
+    private static void registerArmorSetModel(String modId,String armorName, ModelBakeEvent notActuallyAGoodParameter, ItemArmor[] armors){
+        ModelResourceLocation modelLoc = new ModelResourceLocation(new ResourceLocation(modId,armorName+"_helmet"),"inventory");
+        IBakedModel model = notActuallyAGoodParameter.getModelManager().getModel(modelLoc);
+        ItemArmorWithOverlay overlay = new ItemArmorWithOverlay(model,armorName,EntityEquipmentSlot.HEAD);
+        notActuallyAGoodParameter.getModelRegistry().putObject(modelLoc, overlay);
+        armorList.add(armors[0]);
+
+        modelLoc = new ModelResourceLocation(new ResourceLocation(modId,armorName+"_chestplate"),"inventory");
+        model = notActuallyAGoodParameter.getModelManager().getModel(modelLoc);
+        overlay = new ItemArmorWithOverlay(model,armorName,EntityEquipmentSlot.CHEST);
+        notActuallyAGoodParameter.getModelRegistry().putObject(modelLoc, overlay);
+        armorList.add(armors[1]);
+
+        modelLoc = new ModelResourceLocation(new ResourceLocation(modId,armorName+"_leggings"),"inventory");
+        model = notActuallyAGoodParameter.getModelManager().getModel(modelLoc);
+        overlay = new ItemArmorWithOverlay(model,armorName,EntityEquipmentSlot.LEGS);
+        notActuallyAGoodParameter.getModelRegistry().putObject(modelLoc, overlay);
+        armorList.add(armors[2]);
+
+        modelLoc = new ModelResourceLocation(new ResourceLocation(modId,armorName+"_boots"),"inventory");
+        model = notActuallyAGoodParameter.getModelManager().getModel(modelLoc);
+        overlay = new ItemArmorWithOverlay(model,armorName,EntityEquipmentSlot.FEET);
+        notActuallyAGoodParameter.getModelRegistry().putObject(modelLoc, overlay);
+        armorList.add(armors[3]);
     }
 }

@@ -25,10 +25,15 @@ public class ItemArmorOverlayTextureHandler {
     BufferedImage chestplateOverlayImage;
     private BufferedImage leggingsOverlayImage;
     private BufferedImage bootsOverlayImage;
+    //don't get confused by these "normal" names, these will get whitified
+    private TextureAtlasSprite helmet;
+    private TextureAtlasSprite chestplate;
+    private TextureAtlasSprite leggings;
+    private TextureAtlasSprite boots;
     {
         try {
-            helmetOverlayImage = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(MoreDyeableArmors.MODID,"textures/items/default_helmet_overlay.png")).getInputStream());
-            leggingsOverlayImage = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(MoreDyeableArmors.MODID,"textures/items/default_leggings_overlay.png")).getInputStream());
+            helmetOverlayImage = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(MoreDyeableArmors.MODID,"textures/items/leather_helmet_overlay.png")).getInputStream());
+            leggingsOverlayImage = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(MoreDyeableArmors.MODID,"textures/items/leather_leggings_overlay.png")).getInputStream());
             bootsOverlayImage = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation(MoreDyeableArmors.MODID,"textures/items/leather_boots_overlay.png")).getInputStream());
         } catch (IOException e) {
             MoreDyeableArmors.LOGGER.error("Item Armor Overlay Texture handler can't initialize itself :ohno:");
@@ -37,18 +42,22 @@ public class ItemArmorOverlayTextureHandler {
         }
     }
 
-    public ItemArmorOverlayTextureHandler(int color, TextureMap map, String armorName){
+    public ItemArmorOverlayTextureHandler(int color, TextureMap map, String armorName, String modId){
         this.armorName = armorName;
+        helmet = new OverlayTextureAtlasSprite(armorName+"_helmet",Utils.whitify(Utils.getImageFromResourceLoc(new ResourceLocation(modId,"textures/items/"+armorName+"_helmet.png"))));
+        map.setTextureEntry(helmet);
+        chestplate = new OverlayTextureAtlasSprite(armorName+"_chestplate",Utils.whitify(Utils.getImageFromResourceLoc(new ResourceLocation(modId,"textures/items/"+armorName+"_chestplate.png"))));
+        map.setTextureEntry(chestplate);
+        leggings = new OverlayTextureAtlasSprite(armorName+"_leggings",Utils.whitify(Utils.getImageFromResourceLoc(new ResourceLocation(modId,"textures/items/"+armorName+"_leggings.png"))));
+        map.setTextureEntry(leggings);
+        boots = new OverlayTextureAtlasSprite(armorName+"_boots",Utils.whitify(Utils.getImageFromResourceLoc(new ResourceLocation(modId,"textures/items/"+armorName+"_boots.png"))));
+        map.setTextureEntry(boots);
         helmetOverlay = new OverlayTextureAtlasSprite(armorName+"_helmet_overlay",Utils.turnIntoGoodTexture(helmetOverlayImage, color));
         map.setTextureEntry(helmetOverlay);
         leggingsOverlay = new OverlayTextureAtlasSprite(armorName+"_leggings_overlay", Utils.turnIntoGoodTexture(leggingsOverlayImage, color));
         map.setTextureEntry(leggingsOverlay);
         bootsOverlay = new OverlayTextureAtlasSprite(armorName+"_boots_overlay", Utils.turnIntoGoodTexture(bootsOverlayImage, color));
         map.setTextureEntry(bootsOverlay);
-    }
-
-    private ResourceLocation turnImageIntoResourceLoc(String name, BufferedImage image){
-        return new ResourceLocation(StringUtils.remove(textureManager.getDynamicTextureLocation(name, new DynamicTexture(image)).toString(),"png" ));
     }
 
     public TextureAtlasSprite getBootsOverlay() {
@@ -61,6 +70,22 @@ public class ItemArmorOverlayTextureHandler {
 
     public TextureAtlasSprite getLeggingsOverlay() {
         return leggingsOverlay;
+    }
+
+    public TextureAtlasSprite getHelmet() {
+        return helmet;
+    }
+
+    public TextureAtlasSprite getChestplate() {
+        return chestplate;
+    }
+
+    public TextureAtlasSprite getLeggings() {
+        return leggings;
+    }
+
+    public TextureAtlasSprite getBoots() {
+        return boots;
     }
 
     public String getArmorName() {

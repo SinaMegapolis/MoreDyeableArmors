@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
 import java.util.EnumMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -96,6 +99,15 @@ public class Utils {
             }
         }
         return whiteImage;
+    }
+
+    public static BufferedImage getImageFromResourceLoc(ResourceLocation imageLocation){
+        try {
+            return TextureUtil.readBufferedImage(Minecraft.getMinecraft().getResourceManager().getResource(imageLocation).getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
