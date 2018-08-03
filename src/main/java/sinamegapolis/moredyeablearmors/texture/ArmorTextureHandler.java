@@ -28,8 +28,8 @@ public class ArmorTextureHandler {
 
     static {
         try {
-            overlayLayer1 = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation("minecraft","models/armor/leather_layer_1_overlay.png")).getInputStream());
-            overlayLayer2 = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation("minecraft","models/armor/leather_layer_2_overlay.png")).getInputStream());
+            overlayLayer1 = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation("minecraft","textures/models/armor/leather_layer_1_overlay.png")).getInputStream());
+            overlayLayer2 = TextureUtil.readBufferedImage(resourceManager.getResource(new ResourceLocation("minecraft","textures/models/armor/leather_layer_2_overlay.png")).getInputStream());
         } catch (IOException e) {
             MoreDyeableArmors.LOGGER.error("Armor texture handler can't initialize itself :ohno:");
             MoreDyeableArmors.LOGGER.error("Report this error to creator (SinaMegapolis) on github https://bit.ly/2muE81e");
@@ -46,15 +46,15 @@ public class ArmorTextureHandler {
             //makes the leggings overlay
             int c1 = overlay.getRGB(18, 28);
             float[] hsb1 = Utils.getHSB(c1);
-            int mainColor = Utils.setHSB(c1, hsb1[0], hsb1[1] - 1, hsb1[2] + 6);
+            int mainColor = Utils.getColorFromHSB(hsb1[0], hsb1[1] - 1, hsb1[2] + 6);
             overlay.setRGB(5, 24, mainColor);
             overlay.setRGB(6, 24, mainColor);
             overlay.setRGB(6, 23, mainColor);
             float[] hsb2 = Utils.getHSB(mainColor);
-            int secondColor = Utils.setHSB(mainColor, hsb2[0], hsb2[1] + 1, hsb2[2] + 2);
+            int secondColor = Utils.getColorFromHSB(hsb2[0], hsb2[1] + 1, hsb2[2] + 2);
             overlay.setRGB(5, 23, secondColor);
             float[] hsb3 = Utils.getHSB(secondColor);
-            int thirdColor = Utils.setHSB(secondColor, hsb3[0], hsb3[1], hsb3[2] - 11);
+            int thirdColor = Utils.getColorFromHSB(hsb3[0], hsb3[1], hsb3[2] - 11);
             overlay.setRGB(5, 22, thirdColor);
             overlay.setRGB(6, 22, thirdColor);
             overlay.setRGB(5, 25, thirdColor);
@@ -76,7 +76,7 @@ public class ArmorTextureHandler {
             //part 1: boots floor texture
             int c1 = overlay.getRGB(10, 18);
             float[] hsb1 = Utils.getHSB(c1);
-            int firstC = Utils.setHSB(c1, hsb1[0], hsb1[1]+1, hsb1[2]-9);
+            int firstC = Utils.getColorFromHSB(hsb1[0], hsb1[1]+1, hsb1[2]-9);
             overlay.setRGB(8 , 16, firstC);
             overlay.setRGB(8 , 17, firstC);
             overlay.setRGB(8 , 18, firstC);
@@ -103,23 +103,11 @@ public class ArmorTextureHandler {
 
             //part 3: coloring bottom left part of the helmet overlay (from 28, 10 to 28, 12 + 27,12) so it doesn't look weird
             float[] hsb2 = Utils.getHSB(inline[0]);
-            int lastC = Utils.setHSB(inline[0], hsb2[0], hsb2[1], hsb2[2]-5);
+            int lastC = Utils.getColorFromHSB(hsb2[0], hsb2[1], hsb2[2]-5);
             for (int i = 10; i < 13; i++) {
                 overlay.setRGB(28, i, lastC);
             }
             overlay.setRGB(27, 12, lastC);
-            if(ModConfig.leathericArmor){
-                //part 4: adding button overlay for chestplate
-                int bc1 = layer1.getRGB(24, 24);
-                overlay.setRGB(24, 24, bc1);
-                overlay.setRGB(24, 26, bc1);
-                overlay.setRGB(24, 28, bc1);
-                float[] hsb3 = Utils.getHSB(bc1);
-                int bc2 = Utils.setHSB(bc1, hsb3[0]+1, hsb3[1], hsb3[2]-9);
-                overlay.setRGB(23, 24, bc2);
-                overlay.setRGB(23, 26, bc2);
-                overlay.setRGB(23, 28, bc2);
-            }
         }
         return overlay;
     }

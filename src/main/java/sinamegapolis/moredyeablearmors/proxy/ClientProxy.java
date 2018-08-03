@@ -9,7 +9,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void init(FMLInitializationEvent e) {
         for (RenderPlayer playerRender : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
-
             playerRender.addLayer(new LayerArmorDyeableBase(playerRender));
         }
     }

@@ -19,8 +19,11 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
+import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
 import sinamegapolis.moredyeablearmors.capability.Capabilities;
 import sinamegapolis.moredyeablearmors.capability.DyeableCapability;
+import sinamegapolis.moredyeablearmors.config.ModConfig;
+import sinamegapolis.moredyeablearmors.init.ModRegistry;
 import sinamegapolis.moredyeablearmors.texture.ArmorTextureHandler;
 import sinamegapolis.moredyeablearmors.util.Utils;
 
@@ -55,7 +58,7 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
     {
         ItemStack itemstack = entityLivingBaseIn.getItemStackFromSlot(slotIn);
 
-        if (itemstack.getItem() instanceof ItemArmor)
+        if (itemstack.getItem() instanceof ItemArmor && itemstack.getCapability(Capabilities.DYEABLE, null).getColor()!=0)
         {
             ItemArmor itemarmor = (ItemArmor)itemstack.getItem();
 
@@ -69,20 +72,18 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
                 this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, null));
 
                 {
-                    if (itemstack.hasCapability(Capabilities.DYEABLE, null)) // Allow this for anything, not only cloth
+                    if (itemstack.getCapability(Capabilities.DYEABLE,null ).getColor()!=0) // Allow this for anything, not only cloth
                     {
                         int i = itemstack.getCapability(Capabilities.DYEABLE,null ).getColor();
-                        if(i==0)
-                            i = 0xFFFFFF;
                         float f = (float)(i >> 16 & 255) / 255.0F;
                         float f1 = (float)(i >> 8 & 255) / 255.0F;
                         float f2 = (float)(i & 255) / 255.0F;
                         GlStateManager.color(this.colorR * f, this.colorG * f1, this.colorB * f2, this.alpha);
                         t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-                        this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, "overlay"));
                     }
                     // Non-colored
-                    else {
+                    if(ModConfig.leathericArmor || slotIn!=EntityEquipmentSlot.HEAD || itemarmor.getArmorMaterial()!= ItemArmor.ArmorMaterial.CHAIN){
+                        this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, "overlay"));
                         GlStateManager.color(this.colorR, this.colorG, this.colorB, this.alpha);
                         t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
                     }
@@ -92,12 +93,13 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
                     }
                 }
             }
-        }
+        }else super.doRenderLayer(entityLivingBaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
     @Override
     public ResourceLocation getArmorResource(Entity entity, ItemStack stack, EntityEquipmentSlot slot, String type) {
-        if(stack.hasCapability(Capabilities.DYEABLE, null) && stack.getCapability(Capabilities.DYEABLE, null).getColor()!=0){
+        int color = stack.getCapability(Capabilities.DYEABLE, null).getColor();
+        if(color!=0){
             ResourceLocation originalLoc = getOriginalArmorResource(entity, stack, slot, null);
             IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
             TextureManager texManager = Minecraft.getMinecraft().getTextureManager();
@@ -105,12 +107,13 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
             BufferedImage layer;
             ResourceLocation resultLoc = null;
             try {
-                if (isLegSlot(slot) || slot==EntityEquipmentSlot.FEET) {
-                    layer = Utils.whitify(TextureUtil.readBufferedImage(manager.getResource(originalLoc).getInputStream()));
-                    overlay = ArmorTextureHandler.generateLayer2Overlay(layer);
+                int defaultColor = ModRegistry.getItemTextureHandler(((ItemArmor)stack.getItem()).getArmorMaterial().getName()).getColor();
+                if (isLegSlot(slot)) {
+                    layer = Utils.whitify(TextureUtil.readBufferedImage(manager.getResource(ModConfig.leathericArmor ? new ResourceLocation("minecraft","textures/models/armor/leather_layer_2.png") : originalLoc).getInputStream()));
+                    overlay = Utils.changeColor(ArmorTextureHandler.generateLayer2Overlay(layer), defaultColor);
                 }else{
-                    layer = Utils.whitify(TextureUtil.readBufferedImage(manager.getResource(originalLoc).getInputStream()));
-                    overlay = ArmorTextureHandler.generateLayer1Overlay(layer);
+                    layer = Utils.whitify(TextureUtil.readBufferedImage(manager.getResource(ModConfig.leathericArmor ? new ResourceLocation("minecraft","textures/models/armor/leather_layer_1.png") : originalLoc).getInputStream()));
+                    overlay = Utils.changeColor(ArmorTextureHandler.generateLayer1Overlay(layer), defaultColor);
                 }
 
                 if(type==null)

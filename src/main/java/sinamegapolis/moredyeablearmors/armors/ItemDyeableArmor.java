@@ -38,7 +38,6 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
 
     // used for integration with Primitive Mobs' Camouflage dye
     private static final String RAINBOW_TAG = "isRainbow";
-    private static final String COLOR_TAG = "color";
     private static final String DISPLAY_TAG = "display";
     private static final String TICKS_TAG = "ticks";
 
@@ -57,21 +56,21 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
             ItemDyeableArmor itemarmor = (ItemDyeableArmor) stack.getItem();
             if(ModConfig.leathericArmor)
                 return new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()+"_leatheric"), "inventory");
-            return (!this.hasColor(stack)) &&
+            return (this.getColor(stack)==-1) &&
                     !ModConfig.leathericArmor &&
                     (itemarmor.getArmorMaterial()==ArmorMaterial.GOLD || itemarmor.getArmorMaterial()==ArmorMaterial.DIAMOND)
             ? new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()+"_normal"), "inventory")
-                    : new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()), "inventory");
+                    : new ModelResourceLocation(getRegistryName(), "inventory");
         } );
         ModelBakery.registerItemVariants(this,
                 new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()+"_normal"), "inventory"),
-                new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()), "inventory"),
+                new ModelResourceLocation(getRegistryName(), "inventory"),
                 new ModelResourceLocation(new ResourceLocation(MoreDyeableArmors.MODID,getRegistryName().getResourcePath()+"_leatheric"),"inventory"));
     }
 
     @Override
     public int getColor(ItemStack stack) {
-        if(hasColor(stack))
+        if(stack.getCapability(Capabilities.DYEABLE, null).getColor()!=0)
             return stack.getCapability(Capabilities.DYEABLE, null).getColor();
 
         return getDefaultColor();
@@ -89,10 +88,10 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
 
     @Override
     public void setColor(ItemStack stack, int color) {
-        stack.getCapability(Capabilities.DYEABLE, null);
+        stack.getCapability(Capabilities.DYEABLE, null).setColor(color);
     }
 
-    public int getDefaultColor(){
+    private int getDefaultColor(){
         if(ModConfig.leathericArmor)
             return 10511680;
         return -1;
@@ -106,7 +105,7 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
             }
             else {
                 float[] hsb = Utils.getHSB(this.getColor(stack));
-                this.setColor(stack, Utils.setHSB(this.getColor(stack), hsb[0]+5, hsb[1], hsb[2]));
+                this.setColor(stack, Utils.getColorFromHSB(hsb[0]+5, hsb[1], hsb[2]));
                 stack.damageItem(1, player);
             }
         }else {

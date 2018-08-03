@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -28,19 +29,21 @@ public class ItemArmorWithOverlay extends BakedModelWrapper<IBakedModel> {
     private ImmutableList<BakedQuad> gurls = null;
     private EntityEquipmentSlot slot;
     private boolean shouldRenderOverlay = false;
-    private ItemStack stack;
-    public ItemArmorWithOverlay(IBakedModel armor, String armorName, EntityEquipmentSlot slot){
+    private ItemArmor.ArmorMaterial armorMaterial;
+    public ItemArmorWithOverlay(IBakedModel armor, String armorName, EntityEquipmentSlot slot, ItemArmor.ArmorMaterial armorMaterial){
         super(armor);
         this.armor = armor;
         this.armorName = armorName;
         this.slot = slot;
+        this.armorMaterial = armorMaterial;
     }
-    public ItemArmorWithOverlay(IBakedModel armor, String armorName, boolean shouldRenderOverlay, EntityEquipmentSlot slot){
+    public ItemArmorWithOverlay(IBakedModel armor, String armorName, boolean shouldRenderOverlay, EntityEquipmentSlot slot, ItemArmor.ArmorMaterial armorMaterial){
         super(armor);
         this.armor = armor;
         this.armorName = armorName;
         this.shouldRenderOverlay = shouldRenderOverlay;
         this.slot = slot;
+        this.armorMaterial = armorMaterial;
     }
     @Override
     public Pair<? extends IBakedModel, javax.vecmath.Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
@@ -59,8 +62,9 @@ public class ItemArmorWithOverlay extends BakedModelWrapper<IBakedModel> {
                 if(shouldRenderOverlay) {
                     for (BakedQuad quad : armor.getQuads(state, side, rand)) {
                         gurl.add(new BakedQuadRetextured(quad,spriteNormal));
-                        if(slot!=EntityEquipmentSlot.CHEST || ModConfig.leathericArmor)
-                            gurl.add(new BakedQuadRetextured(new BakedQuad(quad.getVertexData(),1,quad.getFace(),quad.getSprite(),quad.shouldApplyDiffuseLighting(),quad.getFormat()),spriteOverlay));
+                        if(slot!=EntityEquipmentSlot.CHEST && (slot!=EntityEquipmentSlot.HEAD || armorMaterial!= ItemArmor.ArmorMaterial.CHAIN || ModConfig.leathericArmor)) {
+                            gurl.add(new BakedQuadRetextured(new BakedQuad(quad.getVertexData(), 1, quad.getFace(), quad.getSprite(), quad.shouldApplyDiffuseLighting(), quad.getFormat()), spriteOverlay));
+                        }
                     }
                 }else gurl.addAll(armor.getQuads(state, side, rand));
                 gurls = gurl.build();
@@ -102,14 +106,21 @@ public class ItemArmorWithOverlay extends BakedModelWrapper<IBakedModel> {
         return slot;
     }
 
+    public ItemArmor.ArmorMaterial getArmorMaterial() {
+        return armorMaterial;
+    }
+
     @Override
     public ItemOverrideList getOverrides() {
         return new ItemOverrideList(super.getOverrides().getOverrides()){
             @Override
             public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity) {
-                int color = stack.getCapability(Capabilities.DYEABLE, null).getColor();
-                if(color!=250) {
-                    return new ItemArmorWithOverlay(((ItemArmorWithOverlay)originalModel).getArmor(),((ItemArmorWithOverlay)originalModel).getArmorName(),true,((ItemArmorWithOverlay)originalModel).getSlot());
+                if(stack.hasCapability(Capabilities.DYEABLE, null)) {
+                    int color = stack.getCapability(Capabilities.DYEABLE, null).getColor();
+                    if (color != 0) {
+                        ItemArmorWithOverlay overlay = (ItemArmorWithOverlay) originalModel;
+                        return new ItemArmorWithOverlay(overlay.getArmor(), overlay.getArmorName(), true, overlay.getSlot(), overlay.getArmorMaterial());
+                    }
                 }
                 return super.handleItemState(originalModel, stack, world, entity);
             }

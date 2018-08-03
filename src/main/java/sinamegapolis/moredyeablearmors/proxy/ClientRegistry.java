@@ -30,7 +30,7 @@ public class ClientRegistry {
     			event.getItemColors().registerItemColorHandler((stack, tint) -> {
     				ItemArmor armor = (ItemArmor) stack.getItem();
     	            if(tint==0){
-						if(stack.hasCapability(Capabilities.DYEABLE, null) && stack.getCapability(Capabilities.DYEABLE, null).getColor()!=250)
+						if(stack.hasCapability(Capabilities.DYEABLE, null) && stack.getCapability(Capabilities.DYEABLE, null).getColor()!=0)
 							return stack.getCapability(Capabilities.DYEABLE, null).getColor();
     	                else if(armor.hasColor(stack))
 							return armor.getColor(stack);
@@ -42,7 +42,7 @@ public class ClientRegistry {
 		for(ItemArmor armor : ModRegistry.armorList){
             event.getItemColors().registerItemColorHandler((stack, tint) -> {
                 if(tint==0){
-					if(stack.hasCapability(Capabilities.DYEABLE, null) && stack.getCapability(Capabilities.DYEABLE, null).getColor()!=250)
+					if(stack.hasCapability(Capabilities.DYEABLE, null) && stack.getCapability(Capabilities.DYEABLE, null).getColor()!=0)
 						return stack.getCapability(Capabilities.DYEABLE, null).getColor();
                 }
                 return 0xFFFFFF;

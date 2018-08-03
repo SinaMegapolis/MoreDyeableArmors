@@ -2,9 +2,8 @@ package sinamegapolis.moredyeablearmors.capability;
 
 public class DyeableCapability implements IDyeable{
 
-    private int color = 250;
-    private int defaultColro;
-    public DyeableCapability(int defaultColor){
+    private int color = 0;
+    public DyeableCapability(){
         //empty constructor because why not
     }
 
@@ -17,4 +16,5 @@ public class DyeableCapability implements IDyeable{
     public void setColor(int color) {
         this.color = color;
     }
+
 }

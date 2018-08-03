@@ -14,8 +14,8 @@ public class ModConfig {
     private ModConfig(){}
 
     @Config.RequiresMcRestart
-    @Config.Comment("Change this to false if you don't want armors to look like leather armors.  Client side only.")
-    public static boolean leathericArmor = true;
+    @Config.Comment("Change this to true if you want armors to look like leather armors.  Client side only.")
+    public static boolean leathericArmor = false;
 
     @Config.Comment("Super duper sekrit easter egg value")
     public static int easterEggValue=1;

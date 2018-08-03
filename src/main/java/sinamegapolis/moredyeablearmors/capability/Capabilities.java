@@ -12,6 +12,6 @@ public class Capabilities{
     public static Capability<IDyeable> DYEABLE = null;
 
     public static void register(){
-        CapabilityManager.INSTANCE.register(IDyeable.class, new DyeableStorage(), () -> new DyeableCapability(0xFBFBFB));
+        CapabilityManager.INSTANCE.register(IDyeable.class, new DyeableStorage(), DyeableCapability::new);
     }
 }

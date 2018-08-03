@@ -39,21 +39,21 @@ public class Utils {
                 color >> 8 & 0xFF,
                 color & 0xFF};
     }
-
+    //TODO: make saturation and brightness value make more sense
     public static float[] getHSB(int color){
         float[] hsb = new float[3];
         int[] argb = getARGBArrayFromInt(color);
         Color.RGBtoHSB(argb[1], argb[2], argb[3], hsb);
         hsb[0] = hsb[0]*360.0f;
-        hsb[1] = hsb[1]*360.0f;
-        hsb[2] = hsb[2]*360.0f;
+        hsb[1] = hsb[1]*100.0f;
+        hsb[2] = hsb[2]*100.0f;
         return hsb;
     }
 
-    public static int setHSB(int color, float h, float s, float b){
+    public static int getColorFromHSB(float h, float s, float b){
         float h1 = h/360.0f;
-        float s1 = s/360.0f;
-        float b1 = b/360.0f;
+        float s1 = s/100.0f;
+        float b1 = b/100.0f;
         return Color.getHSBColor(h1, s1, b1).getRGB();
     }
 
@@ -77,7 +77,21 @@ public class Utils {
                 int rgb = coloredImage.getRGB(i, j);
                 if(getARGBArrayFromInt(rgb)[0]>0){
                     float[] hsb = getHSB(rgb);
-                    coloredImage.setRGB(i, j, setHSB(rgb, hsb[0], 0, hsb[2]));
+                    coloredImage.setRGB(i, j, getColorFromHSB(hsb[0], 0, hsb[2]));
+                }
+            }
+        }
+        return coloredImage;
+    }
+    public static BufferedImage changeColor(BufferedImage coloredImage,int color){
+        for (int i = 0; i < coloredImage.getWidth(); i++) {
+            for (int j = 0; j < coloredImage.getHeight(); j++) {
+                int rgb = coloredImage.getRGB(i, j);
+                if(getARGBArrayFromInt(rgb)[0]>0){
+                    float[] hsb = getHSB(rgb);
+                    float[] colorHSB = getHSB(color);
+                    int[] argb = getARGBArrayFromInt(color);
+                    coloredImage.setRGB(i, j, getColorFromHSB(colorHSB[0],argb[1]==argb[2]&&argb[1]==argb[3] ? 0 : hsb[1], hsb[2]+(colorHSB[2]/2f)));
                 }
             }
         }
@@ -90,15 +104,51 @@ public class Utils {
         for (int i = 0; i < whiteImage.getWidth(); i++) {
             for (int j = 0; j < whiteImage.getHeight(); j++) {
                 int rgb = whiteImage.getRGB(i, j);
+                int[] argb = getARGBArrayFromInt(rgb);
                 if(getARGBArrayFromInt(rgb)[0]>0){
                     float[] hsb = getHSB(rgb);
                     float[] colorhsb = getHSB(color);
-                    int goodColor = setHSB(rgb, colorhsb[0], hsb[1], hsb[2]);
+                    int goodColor;
+                    if(hsb[2]<33) {
+                        if (argb[1] == argb[2] && argb[1] == argb[3])
+                            goodColor = getColorFromHSB(colorhsb[0], 0, hsb[2]);
+                        else goodColor = getColorFromHSB(colorhsb[0], colorhsb[1], hsb[2]);
+                    }else{
+                        if (argb[1] == argb[2] && argb[1] == argb[3])
+                            goodColor = getColorFromHSB(colorhsb[0], 0, getHSB(Utils.combineColors(rgb,color,2))[2]);
+                        else goodColor = getColorFromHSB(colorhsb[0], colorhsb[1], getHSB(Utils.combineColors(rgb,color,2))[2]);
+                    }
                     whiteImage.setRGB(i, j, goodColor);
                 }
             }
         }
         return whiteImage;
+    }
+
+    public static BufferedImage turnIntoGoodTexture(BufferedImage whiteImage, BufferedImage whiteImage2, int color){
+        for (int i = 0; i < whiteImage2.getWidth(); i++) {
+            for (int j = 0; j < whiteImage2.getHeight(); j++) {
+                int rgb = whiteImage2.getRGB(i, j);
+                int rgb2 = whiteImage.getRGB(i, j);
+                int[] argb = getARGBArrayFromInt(color);
+                if(getARGBArrayFromInt(rgb)[0]>0){
+                    float[] hsb2 = getHSB(rgb2);
+                    float[] colorhsb = getHSB(color);
+                    int goodColor;
+                    if(Math.floor(hsb2[2])<55) {
+                        if (argb[1] == argb[2] && argb[1] == argb[3])
+                            goodColor = getColorFromHSB(colorhsb[0], 0, hsb2[2]);
+                        else goodColor = getColorFromHSB(colorhsb[0], colorhsb[1], hsb2[2]);
+                    }else{
+                        if (argb[1] == argb[2] && argb[1] == argb[3])
+                            goodColor = getColorFromHSB(colorhsb[0], 0, getHSB(Utils.combineColors(rgb2,color,2))[2]);
+                        else goodColor = getColorFromHSB(colorhsb[0], colorhsb[1], getHSB(Utils.combineColors(rgb2,color,2))[2]);
+                    }
+                    whiteImage2.setRGB(i, j, goodColor);
+                }
+            }
+        }
+        return whiteImage2;
     }
 
     public static BufferedImage getImageFromResourceLoc(ResourceLocation imageLocation){

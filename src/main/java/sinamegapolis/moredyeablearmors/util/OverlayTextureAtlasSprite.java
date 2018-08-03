@@ -13,6 +13,8 @@ import java.io.InputStream;
 
 public class OverlayTextureAtlasSprite extends TextureAtlasSprite {
     private BufferedImage image;
+    private boolean isArmorTexture=false;
+    private String modId;
     protected OverlayTextureAtlasSprite(String spriteName) {
         super(spriteName);
     }
@@ -20,6 +22,13 @@ public class OverlayTextureAtlasSprite extends TextureAtlasSprite {
     public OverlayTextureAtlasSprite(String spriteName, BufferedImage image) {
         super(spriteName);
         this.image = image;
+    }
+
+    public OverlayTextureAtlasSprite(String spriteName, BufferedImage image, boolean isArmorTexture, String modId) {
+        super(spriteName);
+        this.image = image;
+        this.isArmorTexture = isArmorTexture;
+        this.modId = modId;
     }
 
     @Override
@@ -30,6 +39,8 @@ public class OverlayTextureAtlasSprite extends TextureAtlasSprite {
     @Override
     public String getIconName() {
         ResourceLocation loc = new ResourceLocation(super.getIconName());
+        if(isArmorTexture)
+            return  modId + ":armor/" + loc.getResourcePath();
         return MoreDyeableArmors.MODID + ":" + "items/" + loc.getResourcePath();
     }
 }
