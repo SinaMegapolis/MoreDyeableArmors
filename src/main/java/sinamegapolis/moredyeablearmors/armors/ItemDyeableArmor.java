@@ -31,12 +31,14 @@ import sinamegapolis.moredyeablearmors.util.Utils;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import static net.minecraft.inventory.EntityEquipmentSlot.*;
+
 /**
  * This is just a version of ItemArmor that allows every armor to be colored
  */
 public class ItemDyeableArmor extends ItemArmor implements IHasModel{
 
-    // used for integration with Primitive Mobs' Camouflage dye
+    // used for integration with Primitive Mobs' Camouflage dye and also for super sekrit easter egg
     private static final String RAINBOW_TAG = "isRainbow";
     private static final String DISPLAY_TAG = "display";
     private static final String TICKS_TAG = "ticks";
@@ -44,7 +46,7 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
     public ItemDyeableArmor(ArmorMaterial material, EntityEquipmentSlot slot, ResourceLocation registryName) {
         super(material, 0, slot);
         setRegistryName(registryName);
-        setUnlocalizedName("helmetGold");
+        setUnlocalizedName(getNameBasedOnSlot(slot)+"Gold");
         setCreativeTab(CreativeTabs.COMBAT);
         ModRegistry.ITEMS.add(this);
         this.setMaxDamage(material.getDurability(slot));
@@ -148,8 +150,8 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
         if((!this.hasColor(stack) || this.getColor(stack)==-1) &&  !"overlay".equals(type))
-            return "minecraft:textures/models/armor/"+(ModConfig.leathericArmor? "leather" :this.getArmorMaterial())+"_layer_"+(slot==EntityEquipmentSlot.LEGS?"2":"1")+".png";
-    	return MoreDyeableArmors.MODID + ":textures/armor/" + (ModConfig.leathericArmor ? "leather_" : "") + this.getArmorMaterial().getName() + (slot == EntityEquipmentSlot.LEGS ? "_legs" : "") + ("overlay".equals(type) ? "_overlay" : "") + ".png";
+            return "minecraft:textures/models/armor/"+(ModConfig.leathericArmor? "leather" :this.getArmorMaterial())+"_layer_"+(slot== LEGS?"2":"1")+".png";
+    	return MoreDyeableArmors.MODID + ":textures/armor/" + (ModConfig.leathericArmor ? "leather_" : "") + this.getArmorMaterial().getName() + (slot == LEGS ? "_legs" : "") + ("overlay".equals(type) ? "_overlay" : "") + ".png";
     }
 
     @Override
@@ -157,5 +159,27 @@ public class ItemDyeableArmor extends ItemArmor implements IHasModel{
         if(stack.getDisplayName().equalsIgnoreCase("_sinamegapolis"))
             return 360;
         return super.getMaxDamage(stack);
+    }
+
+    private String getNameBasedOnSlot(EntityEquipmentSlot slot){
+        String result;
+        switch(slot){
+            case HEAD:
+                result = "helmet";
+                break;
+            case CHEST:
+                result = "chestplate";
+                break;
+            case LEGS:
+                result = "leggings";
+                break;
+            case FEET:
+                result = "boots";
+                break;
+                default:
+                    result = "";
+                    break;
+        }
+        return result;
     }
 }

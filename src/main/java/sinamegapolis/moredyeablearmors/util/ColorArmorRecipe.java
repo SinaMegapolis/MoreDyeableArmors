@@ -25,7 +25,6 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
     public boolean matches(InventoryCrafting inv, World worldIn) {
         ItemStack itemstack = ItemStack.EMPTY;
         List<ItemStack> list = Lists.newArrayList();
-        List<Item> leathericList = Lists.newArrayList();
 
         for (int i = 0; i < inv.getSizeInventory(); ++i)
         {
@@ -54,7 +53,7 @@ public class ColorArmorRecipe extends IForgeRegistryEntry.Impl<IRecipe> implemen
             }
         }
 
-        return !itemstack.isEmpty() && !list.isEmpty();
+        return !itemstack.isEmpty() && !list.isEmpty() && (!ModConfig.leathericArmor || itemstack.getCapability(Capabilities.DYEABLE, null).isDyeable());
     }
 
     @Override

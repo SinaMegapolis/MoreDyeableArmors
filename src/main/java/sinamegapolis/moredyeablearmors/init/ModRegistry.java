@@ -2,13 +2,11 @@ package sinamegapolis.moredyeablearmors.init;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.block.BlockCauldron;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -17,38 +15,33 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.registries.IForgeRegistry;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
 import sinamegapolis.moredyeablearmors.capability.Capabilities;
 import sinamegapolis.moredyeablearmors.capability.CapabilityProvider;
-import sinamegapolis.moredyeablearmors.capability.DyeableCapability;
 import sinamegapolis.moredyeablearmors.capability.IDyeable;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
 import sinamegapolis.moredyeablearmors.model.ItemArmorWithOverlay;
+import sinamegapolis.moredyeablearmors.recipes.CamouflageDyeArmorRecipe;
 import sinamegapolis.moredyeablearmors.texture.ItemArmorOverlayTextureHandler;
-import sinamegapolis.moredyeablearmors.texture.layer.LayerArmorDyeableBase;
 import sinamegapolis.moredyeablearmors.util.ColorArmorRecipe;
 import sinamegapolis.moredyeablearmors.util.IntegrateInspirations;
 import sinamegapolis.moredyeablearmors.util.IntegrationHelper;
-import sinamegapolis.moredyeablearmors.util.Utils;
+import sinamegapolis.moredyeablearmors.util.MakeArmorDyeableRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = MoreDyeableArmors.MODID)
 public class ModRegistry {
@@ -60,7 +53,7 @@ public class ModRegistry {
     private static final ItemDyeableArmor GOLD_BOOTS = new ItemDyeableArmor(ArmorMaterial.GOLD,EntityEquipmentSlot.FEET,new ResourceLocation(MoreDyeableArmors.MODID,"dyeablegold_boots"));
     private static ArrayList<ItemArmorOverlayTextureHandler> textureHandlerList;
     public static List<ItemArmor> armorList = Lists.newArrayList();
-    private static ImmutableMap<ItemArmor,ItemDyeableArmor> armorMap = ImmutableMap.<ItemArmor, ItemDyeableArmor>builder()
+    public static ImmutableMap<ItemArmor,ItemDyeableArmor> armorMap = ImmutableMap.<ItemArmor, ItemDyeableArmor>builder()
             .put(Items.GOLDEN_HELMET,GOLD_HELMET)
             .put(Items.GOLDEN_CHESTPLATE,GOLD_CHESTPLATE)
             .put(Items.GOLDEN_LEGGINGS,GOLD_LEGGINGS)
@@ -74,23 +67,20 @@ public class ModRegistry {
     
     @SubscribeEvent
     public static void onRecipeRegister(RegistryEvent.Register<IRecipe> event) {
-    	Ingredient water = Ingredient.fromItems(Items.WATER_BUCKET);
     	for(ImmutableMap.Entry<ItemArmor,ItemDyeableArmor> entry : armorMap.entrySet()) {
     	    ItemStack stack = new ItemStack(entry.getValue());
-    	    stack.getCapability(Capabilities.DYEABLE, null).setColor(0);
-            GameRegistry.addShapelessRecipe(new ResourceLocation(entry.getKey().getRegistryName()+"_cleaning"), new ResourceLocation(""),stack,Ingredient.fromItems(entry.getKey()),water);
-            if(ModConfig.leathericArmor) {
-                GameRegistry.addShapelessRecipe(new ResourceLocation(entry.getKey().getRegistryName()+"_leatheriking"), new ResourceLocation(""), stack,
-                        Ingredient.fromItems(Items.SLIME_BALL)
-                        , Ingredient.fromItems(Items.STRING),
-                        Ingredient.fromItems(Items.LEATHER),
-                        Ingredient.fromStacks(new ItemStack(entry.getKey())));
-            }else{
-                GameRegistry.addShapelessRecipe(new ResourceLocation(entry.getKey().getRegistryName()+"_convertion"),new ResourceLocation("") ,stack,
+            if(!ModConfig.leathericArmor) {
+                GameRegistry.addShapelessRecipe(new ResourceLocation(entry.getKey().getRegistryName()+"_convertion"),null ,stack,
                         Ingredient.fromItems(entry.getKey()));
             }
         }
+
         event.getRegistry().register(new ColorArmorRecipe().setRegistryName(MoreDyeableArmors.MODID, "armor_coloring"));
+    	if(ModConfig.leathericArmor)
+    	    event.getRegistry().register(new MakeArmorDyeableRecipe().setRegistryName(MoreDyeableArmors.MODID,"armor_making_dyeable"));
+
+    	if(Loader.isModLoaded(IntegrationHelper.PRIMITIVE_MOBS))
+    	    event.getRegistry().register(new CamouflageDyeArmorRecipe().setRegistryName(MoreDyeableArmors.MODID, "armor_camouflage"));
 
         if(Loader.isModLoaded(IntegrationHelper.INSPIRATIONS)) {
             if(!IntegrateInspirations.tryLoading())
@@ -102,26 +92,27 @@ public class ModRegistry {
     public static void attachCaps(AttachCapabilitiesEvent<ItemStack> event){
         ItemStack stack = event.getObject();
         if(stack.getItem() instanceof ItemArmor){
+            if(Capabilities.DYEABLE==null) Capabilities.register();
             event.addCapability(new ResourceLocation(MoreDyeableArmors.MODID, "dyeable"), new CapabilityProvider<>(Capabilities.DYEABLE));
         }
     }
 
     @SubscribeEvent
     public static void onModelBake(ModelBakeEvent event){
-        registerArmorSetModel("minecraft", "diamond", event, new ItemArmor[]{Items.DIAMOND_HELMET,Items.DIAMOND_CHESTPLATE,Items.DIAMOND_LEGGINGS,Items.DIAMOND_BOOTS},ArmorMaterial.DIAMOND);
-        registerArmorSetModel("minecraft", "chainmail", event, new ItemArmor[]{Items.CHAINMAIL_HELMET,Items.CHAINMAIL_CHESTPLATE,Items.CHAINMAIL_LEGGINGS,Items.CHAINMAIL_BOOTS},ArmorMaterial.CHAIN);
-        registerArmorSetModel("minecraft", "iron", event, new ItemArmor[]{Items.IRON_HELMET,Items.IRON_CHESTPLATE,Items.IRON_LEGGINGS,Items.IRON_BOOTS},ArmorMaterial.IRON);
-        registerArmorSetModel("minecraft", "gold", event, new ItemArmor[]{Items.GOLDEN_HELMET,Items.GOLDEN_CHESTPLATE,Items.GOLDEN_LEGGINGS,Items.GOLDEN_BOOTS},ArmorMaterial.GOLD);
+        registerArmorSetModel(IntegrationHelper.MINECRAFT_ID, "diamond", event, new ItemArmor[]{Items.DIAMOND_HELMET,Items.DIAMOND_CHESTPLATE,Items.DIAMOND_LEGGINGS,Items.DIAMOND_BOOTS},ArmorMaterial.DIAMOND);
+        registerArmorSetModel(IntegrationHelper.MINECRAFT_ID, "chainmail", event, new ItemArmor[]{Items.CHAINMAIL_HELMET,Items.CHAINMAIL_CHESTPLATE,Items.CHAINMAIL_LEGGINGS,Items.CHAINMAIL_BOOTS},ArmorMaterial.CHAIN);
+        registerArmorSetModel(IntegrationHelper.MINECRAFT_ID, "iron", event, new ItemArmor[]{Items.IRON_HELMET,Items.IRON_CHESTPLATE,Items.IRON_LEGGINGS,Items.IRON_BOOTS},ArmorMaterial.IRON);
+        registerArmorSetModel(IntegrationHelper.MINECRAFT_ID, "gold", event, new ItemArmor[]{Items.GOLDEN_HELMET,Items.GOLDEN_CHESTPLATE,Items.GOLDEN_LEGGINGS,Items.GOLDEN_BOOTS},ArmorMaterial.GOLD);
 
     }
 
     @SubscribeEvent
     public static void onTextureStitch(TextureStitchEvent.Pre event){
         textureHandlerList = new ArrayList<>();
-        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0x33EBCB, event.getMap(), "diamond", "minecraft"));
-        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xC6C6C6, event.getMap(), "chainmail", "minecraft"));
-        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xDBA213, event.getMap(), "gold", "minecraft"));
-        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xFFFFFF, event.getMap(), "iron", "minecraft"));
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0x33EBCB, event.getMap(), "diamond", IntegrationHelper.MINECRAFT_ID));
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xC6C6C6, event.getMap(), "chainmail", IntegrationHelper.MINECRAFT_ID));
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xEAEE57, event.getMap(), "gold", IntegrationHelper.MINECRAFT_ID));
+        textureHandlerList.add(new ItemArmorOverlayTextureHandler(0xFFFFFF, event.getMap(), "iron", IntegrationHelper.MINECRAFT_ID));
     }
 
     public static ItemArmorOverlayTextureHandler getItemTextureHandler(String name){
@@ -156,5 +147,37 @@ public class ModRegistry {
         overlay = new ItemArmorWithOverlay(model,armorName,EntityEquipmentSlot.FEET,material);
         notActuallyAGoodParameter.getModelRegistry().putObject(modelLoc, overlay);
         armorList.add(armors[3]);
+    }
+
+    /**
+     *looks like it will not work if inspirations is present because that mod's code cancels the event
+     * see IntegrateInspirations for that case
+     */
+    @SubscribeEvent
+    public static void onCauldronRightClick(PlayerInteractEvent.RightClickBlock event){
+        if(!Loader.isModLoaded(IntegrationHelper.INSPIRATIONS)) {
+            IBlockState cauldron = event.getWorld().getBlockState(event.getPos());
+            ItemStack armor = event.getItemStack();
+            if (cauldron == Blocks.CAULDRON &&
+                    armor.hasCapability(Capabilities.DYEABLE, null) &&
+                    armor.getCapability(Capabilities.DYEABLE, null).getColor() != 0 &&
+                    cauldron.getValue(BlockCauldron.LEVEL) > 0) {
+                armor.getCapability(Capabilities.DYEABLE, null).setColor(0);
+                if (ModConfig.leathericArmor)
+                    armor.getCapability(Capabilities.DYEABLE, null).setDyeable(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onArmorTick(TickEvent.PlayerTickEvent event){
+        event.player.getArmorInventoryList().forEach(armorStack ->{
+            if(!(armorStack.getItem() instanceof ItemArmor) || Capabilities.DYEABLE==null)
+                return;
+            IDyeable armorCap = armorStack.getCapability(Capabilities.DYEABLE, null);
+            if(armorCap.getArmorStack()==ItemStack.EMPTY)
+                armorCap.setArmorStack(armorStack);
+            armorCap.tickPlease(event.player);
+        });
     }
 }

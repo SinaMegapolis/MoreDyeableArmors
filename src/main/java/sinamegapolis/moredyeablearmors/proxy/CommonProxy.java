@@ -13,7 +13,6 @@ import sinamegapolis.moredyeablearmors.init.ModRegistry;
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
         MinecraftForge.EVENT_BUS.register(new ModRegistry());
-        Capabilities.register();
         MDAPacketHandler.INSTANCE.registerMessage(CMessageArmorColored.ArmorColoredMessageHandler.class, CMessageArmorColored.class, 1, Side.CLIENT);
     }
 

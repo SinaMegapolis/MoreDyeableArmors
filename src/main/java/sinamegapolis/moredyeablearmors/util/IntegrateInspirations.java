@@ -5,7 +5,6 @@ import knightminer.inspirations.library.recipe.cauldron.ICauldronRecipe;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
-import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
 import sinamegapolis.moredyeablearmors.capability.Capabilities;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
 
@@ -27,6 +26,11 @@ public class IntegrateInspirations {
                         stackarmor = stack.copy();
                         if(state.getColor()!=-1)
                             stackarmor.getCapability(Capabilities.DYEABLE, null).setColor(state.getColor());
+                        else {
+                            stackarmor.getCapability(Capabilities.DYEABLE, null).setColor(0);
+                            if(ModConfig.leathericArmor)
+                                stackarmor.getCapability(Capabilities.DYEABLE, null).setDyeable(true);
+                        }
                     }
                     return stackarmor;
                 }

@@ -11,9 +11,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import sinamegapolis.moredyeablearmors.capability.Capabilities;
+import sinamegapolis.moredyeablearmors.capability.IDyeable;
+import sinamegapolis.moredyeablearmors.config.ModConfig;
 
 public class Utils {
     public static int combineColors(int color1, int color2, int scale) {

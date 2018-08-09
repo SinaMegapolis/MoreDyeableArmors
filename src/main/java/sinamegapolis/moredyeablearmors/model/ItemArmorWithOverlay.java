@@ -37,7 +37,7 @@ public class ItemArmorWithOverlay extends BakedModelWrapper<IBakedModel> {
         this.slot = slot;
         this.armorMaterial = armorMaterial;
     }
-    public ItemArmorWithOverlay(IBakedModel armor, String armorName, boolean shouldRenderOverlay, EntityEquipmentSlot slot, ItemArmor.ArmorMaterial armorMaterial){
+    private ItemArmorWithOverlay(IBakedModel armor, String armorName, boolean shouldRenderOverlay, EntityEquipmentSlot slot, ItemArmor.ArmorMaterial armorMaterial){
         super(armor);
         this.armor = armor;
         this.armorName = armorName;
@@ -117,7 +117,7 @@ public class ItemArmorWithOverlay extends BakedModelWrapper<IBakedModel> {
             public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity) {
                 if(stack.hasCapability(Capabilities.DYEABLE, null)) {
                     int color = stack.getCapability(Capabilities.DYEABLE, null).getColor();
-                    if (color != 0) {
+                    if (color != 0 || (ModConfig.leathericArmor && stack.getCapability(Capabilities.DYEABLE, null).isDyeable())) {
                         ItemArmorWithOverlay overlay = (ItemArmorWithOverlay) originalModel;
                         return new ItemArmorWithOverlay(overlay.getArmor(), overlay.getArmorName(), true, overlay.getSlot(), overlay.getArmorMaterial());
                     }
