@@ -1,0 +1,44 @@
+item.moredyeablearmors.dyeablechainmail_helmet.name=Capacete de cota de malha (Tingível)
+item.moredyeablearmors.dyeablechainmail_chestplate.name=Peitoral de cota de malha (Tingível)
+item.moredyeablearmors.dyeablechainmail_leggings.name=Calças de cota de malha (Tingível)
+item.moredyeablearmors.dyeablechainmail_boots.name=Botas de cota de malha (Tingível)
+
+item.moredyeablearmors.dyeablediamond_helmet.name=Capacete de diamante (Tingível)
+item.moredyeablearmors.dyeablediamond_chestplate.name=Peitoral de diamante (Tingível)
+item.moredyeablearmors.dyeablediamond_leggings.name=Calças de diamante (Tingível)
+item.moredyeablearmors.dyeablediamond_boots.name=Botas de diamante (Tingível)
+
+item.moredyeablearmors.dyeableiron_helmet.name=Capacete de ferro (Tingível)
+item.moredyeablearmors.dyeableiron_chestplate.name=Peitoral de ferro (Tingível)
+item.moredyeablearmors.dyeableiron_leggings.name=Calças de ferro (Tingível)
+item.moredyeablearmors.dyeableiron_boots.name=Botas de ferro (Tingível)
+
+item.moredyeablearmors.dyeablegold_helmet.name=Capacete de ouro (Tingível)
+item.moredyeablearmors.dyeablegold_chestplate.name=Peitoral de ouro (Tingível)
+item.moredyeablearmors.dyeablegold_leggings.name=Calças de ouro (Tingível)
+item.moredyeablearmors.dyeablegold_boots.name=Botas de ouro (Tingível)
+
+item.moredyeablearmors.dyeablechainmail_helmet_leatheric.name=Capacete de cota de malha (Tingível)
+item.moredyeablearmors.dyeablechainmail_chestplate_leatheric.name=Peitoral de cota de malha (Tingível)
+item.moredyeablearmors.dyeablechainmail_leggings_leatheric.name=Calças de cota de malha (Tingível)
+item.moredyeablearmors.dyeablechainmail_boots_leatheric.name=Botas de cota de malha (Tingível)
+
+item.moredyeablearmors.dyeablediamond_helmet_leatheric.name=Capacete de diamante (Tingível)
+item.moredyeablearmors.dyeablediamond_chestplate_leatheric.name=Peitoral de diamante (Tingível)
+item.moredyeablearmors.dyeablediamond_leggings_leatheric.name=Calças de diamante (Tingível)
+item.moredyeablearmors.dyeablediamond_boots_leatheric.name=Botas de diamante (Tingível)
+
+item.moredyeablearmors.dyeableiron_helmet_leatheric.name=Capacete de ferro (Tingível)
+item.moredyeablearmors.dyeableiron_chestplate_leatheric.name=Peitoral de ferro (Tingível)
+item.moredyeablearmors.dyeableiron_leggings_leatheric.name=Calças de ferro (Tingível)
+item.moredyeablearmors.dyeableiron_boots_leatheric.name=Botas de ferro (Tingível)
+
+item.moredyeablearmors.dyeablegold_helmet_leatheric.name=Capacete de ouro (Tingível)
+item.moredyeablearmors.dyeablegold_chestplate_leatheric.name=Peitoral de ouro (Tingível)
+item.moredyeablearmors.dyeablegold_leggings_leatheric.name=Calças de ouro (Tingível)
+item.moredyeablearmors.dyeablegold_boots_leatheric.name=Botas de ouro (Tingível)
+
+texts.moredyeablearmors.tooltip.camouflage=Padrão de camuflagem:
+texts.moredyeablearmors.tooltip.camouflage.false=§bFalse
+texts.moredyeablearmors.tooltip.camouflage.true=§bTrue
+texts.moredyeablearmors.tooltip.moreinfo=§9§oPressione SHIFT para saber mais
