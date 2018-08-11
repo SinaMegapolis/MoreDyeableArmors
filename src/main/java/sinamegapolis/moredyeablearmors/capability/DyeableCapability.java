@@ -1,11 +1,8 @@
 package sinamegapolis.moredyeablearmors.capability;
 
-import net.daveyx0.primitivemobs.core.PrimitiveMobsItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Loader;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
-import sinamegapolis.moredyeablearmors.util.IntegrationHelper;
 import sinamegapolis.moredyeablearmors.util.Utils;
 
 public class DyeableCapability implements IDyeable{
@@ -64,13 +61,9 @@ public class DyeableCapability implements IDyeable{
                 float[] hsb = Utils.getHSB(this.getColor());
                 this.setColor(Utils.getColorFromHSB(hsb[0]+5, hsb[1], hsb[2]));
             }
-        }else {
-            if (Loader.isModLoaded(IntegrationHelper.PRIMITIVE_MOBS) && this.isRainbow()) {
-                //you tell me, how else would i trigger onArmorTick???
-                if (PrimitiveMobsItems.CAMOUFLAGE_CHEST != null)
-                    PrimitiveMobsItems.CAMOUFLAGE_CHEST.onArmorTick(player.getEntityWorld(), player, armorStack);
-            }
         }
+        //can't adapt Primitive mobs' camouflage dye system into the mod as doing so would be highly inefficient
+        //TODO: make a system that works pretty much like primitive mobs' Camouflage dye
     }
 
     private int getTicks(){

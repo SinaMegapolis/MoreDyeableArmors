@@ -82,6 +82,7 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
                         t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
                     }
                     // Non-colored
+                    //TODO: fix this silly if if else if pif system that causes white armors bug
                     if(ModConfig.leathericArmor || slotIn!=EntityEquipmentSlot.HEAD || itemarmor.getArmorMaterial()!= ItemArmor.ArmorMaterial.CHAIN){
                         this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, "overlay"));
                         GlStateManager.color(this.colorR, this.colorG, this.colorB, this.alpha);

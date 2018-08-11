@@ -30,6 +30,7 @@ dependencies {
     deobfCompile "slimeknights.mantle:Mantle:1.12-1.3.2.24"
     deobfCompile "knightminer:Inspirations:1.12.2-0.2.0.31"
     deobfCompile "primitive-mobs:primitivemobs:1.1.6_beta"
+    deobfCompile "com.mcmoddev:BaseMetals:1.12-2.5.0-beta+"
 }
 
 repositories {
@@ -41,6 +42,10 @@ repositories {
         //this is for files from CurseForge :P (which means that they are public)
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        name 'MMD'
+        url 'https://maven.mcmoddev.com/'
     }
 }
 

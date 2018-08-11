@@ -11,15 +11,17 @@ public class DyeableStorage implements Capability.IStorage<IDyeable> {
     @Nullable
     @Override
     public NBTBase writeNBT(Capability<IDyeable> capability, IDyeable instance, EnumFacing side) {
-        NBTTagCompound compund = new NBTTagCompound();
-        compund.setInteger("color", instance.getColor());
-        compund.setBoolean("canGetDyed", instance.isDyeable());
-        return compund;
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setInteger("color", instance.getColor());
+        compound.setBoolean("canGetDyed", instance.isDyeable());
+        compound.setBoolean("isRainbow", instance.isRainbow());
+        return compound;
     }
 
     @Override
     public void readNBT(Capability<IDyeable> capability, IDyeable instance, EnumFacing side, NBTBase nbt) {
         instance.setColor(((NBTTagCompound)nbt).getInteger("color"));
         instance.setDyeable(((NBTTagCompound)nbt).getBoolean("canGetDyed"));
+        instance.setRainbow(((NBTTagCompound)nbt).getBoolean("isRainbow"));
     }
 }
