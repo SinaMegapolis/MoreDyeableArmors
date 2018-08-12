@@ -9,8 +9,10 @@ import com.mcmoddev.lib.item.ItemMMDArmor;
 import com.mcmoddev.lib.material.MMDMaterial;
 import net.minecraft.block.BlockCauldron;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -21,10 +23,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentUtils;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -211,4 +216,15 @@ public class ModRegistry {
             armorCap.tickPlease(event.player);
         });
     }
+
+    @SubscribeEvent
+    public static void addColorToToolTip(ItemTooltipEvent event){
+        ItemStack itemArmor = event.getItemStack();
+        List<String> tooltipTexts = event.getToolTip();
+        if(itemArmor.hasCapability(Capabilities.DYEABLE, null) && itemArmor.getCapability(Capabilities.DYEABLE, null).getColor()!=0){
+            IDyeable armorCap = itemArmor.getCapability(Capabilities.DYEABLE, null);
+            tooltipTexts.add(new TextComponentString("§aColor: ").getText() + Integer.toHexString(armorCap.getColor()));
+        }
+    }
+
 }
