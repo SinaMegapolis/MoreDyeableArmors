@@ -69,26 +69,21 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
                 t.setModelAttributes(this.renderer.getMainModel());
                 t.setLivingAnimations(entityLivingBaseIn, limbSwing, limbSwingAmount, partialTicks);
                 this.setModelSlotVisible(t, slotIn);
-                this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, null));
-
                 {
-                    if (itemstack.getCapability(Capabilities.DYEABLE,null ).getColor()!=0) // Allow this for anything, not only cloth
-                    {
-                        int i = itemstack.getCapability(Capabilities.DYEABLE,null ).getColor();
-                        float f = (float)(i >> 16 & 255) / 255.0F;
-                        float f1 = (float)(i >> 8 & 255) / 255.0F;
-                        float f2 = (float)(i & 255) / 255.0F;
-                        GlStateManager.color(this.colorR * f, this.colorG * f1, this.colorB * f2, this.alpha);
-                        t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-                    }
-                    // Non-colored
+                    int i = itemstack.getCapability(Capabilities.DYEABLE,null ).getColor();
+                    float f = (float)(i >> 16 & 255) / 255.0F;
+                    float f1 = (float)(i >> 8 & 255) / 255.0F;
+                    float f2 = (float)(i & 255) / 255.0F;
+                    this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, null));
+                    GlStateManager.color(this.colorR * f, this.colorG * f1, this.colorB * f2, this.alpha);
+                    t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+                    // Overlays
                     //TODO: fix this silly if if else if pif system that causes white armors bug
-                    if(false) {
-                        if (ModConfig.leathericArmor || slotIn != EntityEquipmentSlot.HEAD || itemarmor.getArmorMaterial() != ItemArmor.ArmorMaterial.CHAIN) {
-                            this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, "overlay"));
-                            GlStateManager.color(this.colorR, this.colorG, this.colorB, this.alpha);
-                            t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-                        }
+                    if (itemarmor.getArmorMaterial() != ItemArmor.ArmorMaterial.CHAIN
+                            || (itemarmor.getArmorMaterial()== ItemArmor.ArmorMaterial.CHAIN && ModConfig.leathericArmor)) {
+                        this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, "overlay"));
+                        GlStateManager.color(this.colorR, this.colorG, this.colorB, this.alpha);
+                        t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
                     }
                     if (!this.skipRenderGlint && itemstack.hasEffect())
                     {
@@ -96,14 +91,16 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
                     }
                 }
             }
-        }else super.doRenderLayer(entityLivingBaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
+        }
+        else
+            super.doRenderLayer(entityLivingBaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
     @Override
     public ResourceLocation getArmorResource(Entity entity, ItemStack stack, EntityEquipmentSlot slot, String type) {
         int color = stack.getCapability(Capabilities.DYEABLE, null).getColor();
         if(color!=0){
-            ResourceLocation originalLoc = getOriginalArmorResource(entity, stack, slot, null);
+            ResourceLocation originalLoc = super.getArmorResource(entity, stack, slot, null);
             IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
             TextureManager texManager = Minecraft.getMinecraft().getTextureManager();
             BufferedImage overlay;
@@ -135,31 +132,6 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
         return super.getArmorResource(entity, stack, slot, type);
     }
 
-    //copy pasted from LayerArmorBase to avoid recursive call
-    private ResourceLocation getOriginalArmorResource(net.minecraft.entity.Entity entity, ItemStack stack, EntityEquipmentSlot slot, String type)
-    {
-        ItemArmor item = (ItemArmor)stack.getItem();
-        String texture = item.getArmorMaterial().getName();
-        String domain = "minecraft";
-        int idx = texture.indexOf(':');
-        if (idx != -1)
-        {
-            domain = texture.substring(0, idx);
-            texture = texture.substring(idx + 1);
-        }
-        String s1 = String.format("%s:textures/models/armor/%s_layer_%d%s.png", domain, texture, (isLegSlot(slot) ? 2 : 1), type == null ? "" : String.format("_%s", type));
-
-        s1 = net.minecraftforge.client.ForgeHooksClient.getArmorTexture(entity, stack, s1, slot, type);
-        ResourceLocation resourcelocation = ARMOR_TEXTURE_RES_MAP.get(s1);
-
-        if (resourcelocation == null)
-        {
-            resourcelocation = new ResourceLocation(s1);
-            ARMOR_TEXTURE_RES_MAP.put(s1, resourcelocation);
-        }
-
-        return resourcelocation;
-    }
     private boolean isLegSlot(EntityEquipmentSlot slotIn)
     {
         return slotIn == EntityEquipmentSlot.LEGS;
