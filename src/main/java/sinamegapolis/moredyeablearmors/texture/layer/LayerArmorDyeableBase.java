@@ -5,9 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -19,9 +17,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
-import sinamegapolis.moredyeablearmors.armors.ItemDyeableArmor;
 import sinamegapolis.moredyeablearmors.capability.Capabilities;
-import sinamegapolis.moredyeablearmors.capability.DyeableCapability;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
 import sinamegapolis.moredyeablearmors.init.ModRegistry;
 import sinamegapolis.moredyeablearmors.texture.ArmorTextureHandler;
@@ -31,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
 
+//TODO: remake the layer because extending the vanilla one somehow causes the white armors bug
 public class LayerArmorDyeableBase extends LayerBipedArmor {
 
     private RenderLivingBase<?> renderer;
@@ -43,7 +40,7 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
 
     public LayerArmorDyeableBase(RenderLivingBase<?> rendererIn) {
         super(rendererIn);
-        this.renderer=rendererIn;
+        this.renderer = rendererIn;
     }
 
     @Override
@@ -78,7 +75,6 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
                     GlStateManager.color(this.colorR * f, this.colorG * f1, this.colorB * f2, this.alpha);
                     t.render(entityLivingBaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
                     // Overlays
-                    //TODO: fix this silly if if else if pif system that causes white armors bug
                     if (itemarmor.getArmorMaterial() != ItemArmor.ArmorMaterial.CHAIN
                             || (itemarmor.getArmorMaterial()== ItemArmor.ArmorMaterial.CHAIN && ModConfig.leathericArmor)) {
                         this.renderer.bindTexture(this.getArmorResource(entityLivingBaseIn, itemstack, slotIn, "overlay"));
@@ -92,11 +88,10 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
                 }
             }
         }
-        else
+        else if (itemstack.getItem() instanceof ItemArmor)
             super.doRenderLayer(entityLivingBaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
-    @Override
     public ResourceLocation getArmorResource(Entity entity, ItemStack stack, EntityEquipmentSlot slot, String type) {
         int color = stack.getCapability(Capabilities.DYEABLE, null).getColor();
         if(color!=0){
@@ -136,4 +131,6 @@ public class LayerArmorDyeableBase extends LayerBipedArmor {
     {
         return slotIn == EntityEquipmentSlot.LEGS;
     }
+
+
 }
