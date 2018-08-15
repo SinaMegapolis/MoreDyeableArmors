@@ -16,6 +16,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import sinamegapolis.moredyeablearmors.MoreDyeableArmors;
 import sinamegapolis.moredyeablearmors.capability.Capabilities;
 import sinamegapolis.moredyeablearmors.config.ModConfig;
@@ -27,7 +29,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
 
-//TODO: remake the layer because extending the vanilla one somehow causes the white armors bug
+@SideOnly(Side.CLIENT)
 public class LayerArmorDyeableBase extends LayerBipedArmor {
 
     private RenderLivingBase<?> renderer;
